@@ -1,31 +1,30 @@
 const Discord = require('discord.js');
 
-module.exports = async (guild) => {
+module.exports = async (client, guild) => {
     // ------ LOG THE SERVER JOINED
     console.log(`> Joined server ${guild.name}.`);
     // ------
-    let RoleChannel = guild.channels.some(c => c.name === 'wybierz-role'); // channel for role selction
-    let SocialMediaChannel = guild.channels.some(c => c.name === 'social-media'); // channel for social media info
-    let RulesChannel = guild.channels.some(c => c.name === 'regulamin'); // channel for rules info
-    if(!RoleChannel) {
+    const _RoleChannel = guild.channels.some(c => c.name === 'wybierz-role'); // channel for role selction
+    const _SocialMediaChannel = guild.channels.some(c => c.name === 'social-media'); // channel for social media info
+    const _RulesChannel = guild.channels.some(c => c.name === 'regulamin'); // channel for rules info
+    if(!_RoleChannel) {
         console.log(`> Role selection channel not found. Creating one...`)
-        RoleChannel = guild.createChannel('wybierz-role', { type: 'text', position: '2' })
-        .then(console.log(`Created channel ${RoleChannel.name}`))
+        var RoleChannel = await guild.createChannel('wybierz-role', { type: 'text', position: '2' })
+        .then(i => console.log(`Created channel ${i.name}`))
         .catch(console.error)
     }
-    if(!SocialMediaChannel) {
+    if(!_SocialMediaChannel) {
         console.log(`> Social media info channel not found. Creating one...`)
-        SocialMediaChannel = guild.createChannel('social-media', { type: 'text', position: '3' })
-        .then(console.log(`Created channel ${SocialMediaChannel.name}`))
+        var SocialMediaChannel = await guild.createChannel('social-media', { type: 'text', position: '3' })
+        .then(i => console.log(`Created channel ${i.name}`))
         .catch(console.error)
     }
-    if(!RulesChannel) {
+    if(!_RulesChannel) {
         console.log(`> Rules info channel not found. Creating one...`)
-        RulesChannel = guild.createChannel('regulamin', { type: 'text', position: '4' })
-        .then(console.log(`Created channel ${RulesChannel.name}`))
+        var RulesChannel = await guild.createChannel('regulamin', { type: 'text', position: '4' })
+        .then(i => console.log(`Created channel ${i.name}`))
         .catch(console.error)
     }
-    console.log(RulesChannel);
     const rulesEmbed = new Discord.RichEmbed()
         .setTitle('Regulamin serwera Discord - Dziupla Barona')
         .setAuthor(guild.name, guild.iconURL)
