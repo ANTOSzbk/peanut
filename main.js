@@ -12,7 +12,6 @@ const client = new Discord.Client();
 
 client.config = config;
 
-
 const events = {
     MESSAGE_REACTION_ADD: 'messageReactionAdd',
     MESSAGE_REACTION_REMOVE: 'messageReactionRemove',
