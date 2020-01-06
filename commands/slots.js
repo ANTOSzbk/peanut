@@ -1,10 +1,6 @@
 const money = require('discord-money');
 
 exports.run = (client, message, args) => {
-    //if (message.content.startsWith('!slots')) {
-    //if(message.channel.id != '628638653555671054') return;
-    //let args = message.content.slice(1).split(' ');
-    //args.shift();
     if (!args.length) {
         message.reply('🎰 **Podaj ilość kredytów.** Użyj \n `!slots [ilość kredytów/all]`')
         return;
@@ -76,3 +72,5 @@ exports.run = (client, message, args) => {
         }).catch(console.error);
     }
 }
+
+module.exports.aliases = ['slot'];

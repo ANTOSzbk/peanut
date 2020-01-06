@@ -63,7 +63,7 @@ fs.readdir("./commands/", (err, files) => {
         let props = require(`./commands/${file}`);
         // Get just the command name from the file name
         let commandName = file.split(".")[0];
-        console.log(`Attempting to load command ${commandName}`);
+        console.log(`Attempting to load command ${commandName} with [${!props.aliases ? 'no' : props.aliases.join(', ')}] aliases`);
         // Here we simply store the whole thing in the command Enmap. We're not running it right now.
         client.commands.set(commandName, props);
     });

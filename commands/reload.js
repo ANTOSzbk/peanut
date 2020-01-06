@@ -2,15 +2,12 @@ exports.run = (client, message, args) => {
     if (!args || args.length < 1) return message.reply("Must provide a command name to reload.");
     const commandName = args[0];
     if (commandName === 'all') {
-        let keys = Array.from( client.commands.keys() );
-        console.log(keys);
+        let keys = Array.from(client.commands.keys());
         keys.forEach(( command ) => {
-            console.log(command);
             delete require.cache[require.resolve(`./${command}.js`)];
             client.commands.delete(command);
             const props = require(`./${command}.js`);
             client.commands.set(command, props);
-            // message.reply(`The command ${command} has been reloaded.`);
         })
         return message.reply(`Reloaded all commands - ${keys.join(', ')}.`).then(async message => {
             await message.react('✅').then(reaction => {
@@ -34,3 +31,5 @@ exports.run = (client, message, args) => {
         })
     });
 };
+
+module.exports.aliases = ['rld', 'reload']; 
