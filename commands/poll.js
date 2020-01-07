@@ -9,7 +9,7 @@ exports.run = (client, message, args) => {
     if (_cooldown.has(message.author.id))
         return message.reply(`Możesz tworzyć ankietę raz na **2** minuty. Odczekaj ${timeleft.toFixed(0)} sekund przed ponownym użyciem.`)
     if (!args.length)
-        return message.reply(`🗳️ Brak danych do utworzenia ankiety. Użyj: \n \`!poll [pytanie]\` - odpowiedzi tak/nie \n`);
+        return message.reply(`🗳️ **Brak danych do utworzenia ankiety**. Użyj: \n \`!poll [pytanie]\` - odpowiedzi tak/nie \n`);
     //\`!poll '[pytanie]' '[odp1]' '[odp2]' itd..\` - maksymalnie 4 odpowiedzi`);
     if (args.length > 4 && args.includes(`'`)) {
         return message.reply(`🗳️ Za dużo odpowiedzi, max 4.`)

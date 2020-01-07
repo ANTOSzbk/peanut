@@ -5,10 +5,15 @@ const sqlite3 = require("sqlite3").verbose();
 const moment = require('moment');
 const Enmap = require('enmap');
 const fs = require('fs');
+const quiz = require('./quiz.json');
 
 moment.locale('pl');
 
 const client = new Discord.Client();
+const voted = new Map();
+
+
+let db = new sqlite3.Database('./userMoney.sqlite');
 
 client.config = config;
 
@@ -72,6 +77,7 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
 
     let channel = messageReaction.message.channel;
     let gMember = messageReaction.message.guild.member(user);
+    const questionChannel = client.channels.find(c => c.id === '663584733862690835')
     if (user.bot) return;
     if (channel.name === 'wybierz-role') {
         const emoji = messageReaction.emoji.toString();
@@ -119,7 +125,58 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
                 break;
         }
     }
+    if (channel.id === questionChannel.id) {
+        const emoji = messageReaction.emoji.toString();
+        let _voted = voted.get(user.id) === messageReaction.message.id ? true : false;
+        let lastUncached = await questionChannel.fetchMessages({ limit: 1 });
+        lastUncached = lastUncached.last();
+        if(lastUncached.id !== messageReaction.message.id) return console.log(`${user.tag} zareagowal na stare pytanie przy uzyciu ${emoji}.`);
+        db.get(`SELECT * FROM moneyset WHERE userID = '${gMember.user.id}'`, async (err, row) => {
+            if (err) throw err;
+            if (!row) {
+                var stmt = db.prepare("INSERT INTO moneyset (userID, money, lastDaily, answer) VALUES (?,?,?,?)");
+                stmt.run(user.id, 0, 'Not Collected', null);
+                stmt.finalize();
+                console.log(`Created a row for ${user.tag} in messageReactionAdd event.`)
+            } else {
+                if (row.answer != null) {
+                    //console.log(row.answer);
+                    voted.set(user.id, messageReaction.message.id);
+                    return gMember.send(`Już wybrałeś odpowiedź do ostatniego pytania **>${row.answer}<**. Poczekaj na następne pytanie.`);
+                }
+            }
+            switch (emoji) {
+                case '🇦':
+                    if (_voted) return await messageReaction.remove(user);
+                    db.run(`UPDATE moneyset SET answer = 'A' WHERE userID = '${user.id}'`);
+                    voted.set(user.id, messageReaction.message.id);
+                    console.log(_voted);
+                    break;
+                case '🇧':
+                    if (_voted) return await messageReaction.remove(user);
+                    db.run(`UPDATE moneyset SET answer = 'B' WHERE userID = '${user.id}'`);
+                    voted.set(user.id, messageReaction.message.id);
+                    console.log(_voted);
+                    break;
+                case '🇨':
+                    if (_voted) return await messageReaction.remove(user);
+                    db.run(`UPDATE moneyset SET answer = 'C' WHERE userID = '${user.id}'`);
+                    voted.set(user.id, messageReaction.message.id);
+                    console.log(_voted);
+                    break;
+                case '🇩':
+                    if (_voted) return await messageReaction.remove(user);
+                    db.run(`UPDATE moneyset SET answer = 'D' WHERE userID = '${user.id}'`);
+                    voted.set(user.id, messageReaction.message.id);
+                    console.log(_voted);
+                    break;
+                default:
+                    await messageReaction.remove(user);
+                    break;
+            }
+        })
 
+    }
 });
 
 client.on('messageReactionRemove', async (messageReaction, user) => {

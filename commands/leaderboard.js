@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const sqlite3 = require('sqlite3').verbose();
 
 exports.run = async (client, message, args) => {
+    //if(message.channel.id != '628638653555671054') return;
     let db = new sqlite3.Database('./userMoney.sqlite');
     const Leaders = [];
     const embed = new Discord.RichEmbed()
@@ -21,29 +22,25 @@ exports.run = async (client, message, args) => {
             if (message.author.id != row.userID && f == false) p++;
             if (message.author.id === row.userID) f = true;
             if (!global) {
-                //var user = client.users.find("id", row.userID);
                 var user = client.users.find(user => user.id == row.userID);
-                user = (user !== null) ? user.tag : "Użytkownik opuścił serwer";
+                user = (user !== null) ? user.tag : user.tag;
             } else {
                 var user = message.guild.members.find(user => user.id == `${row.userID}`);
-                //var user = message.guild.members.find("id", `${row.userID}`);
-                user = (user !== null) ? user.user.tag : "Użytkownik opuścił serwer";
+                user = (user !== null) ? user.displayName : `Cannot find user`;
             }
+            
             if (x < 10 && user !== null) {
-                Leaders.push(`[ ${x} ] > ** ${user} ** \n 
-                ** \u200b\u200b\u200b\u200b\u200b\u200b 💰 $${row.money.toLocaleString()} ** 💰 \n -------------------- \n`);
-                // embed.addField(`\u200b`, `[ ${x} ] - **${user}**`, true)
-                // embed.addField(`\u200b`, `**> $${row.money.toLocaleString()} 💰 \n\n\n**`, true)
-                // embed.addField(`\u200b`, `---------------`)
+                embed.addField(`${x} > **${user}**`, ` \u200b\u200b > **$**${row.money.toLocaleString()}`);
                 x++;
             } else if (Leaders.length == 10) {
                 return;
             }
         });
-        embed.setDescription(Leaders);
         embed.addField(`\u200b`, `**@${message.author.username}**, Twoja pozycja w rankingu globalnym to **${p}**.`)
         message.channel.send({
             embed
         });
     });
 }
+
+module.exports.aliases = ['top', 'top10', 'leaders']
