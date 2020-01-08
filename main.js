@@ -1,11 +1,9 @@
 const Discord = require("discord.js");
 const config = require("./config.json");
-const money = require('discord-money');
 const sqlite3 = require("sqlite3").verbose();
 const moment = require('moment');
 const Enmap = require('enmap');
 const fs = require('fs');
-const quiz = require('./quiz.json');
 
 moment.locale('pl');
 
@@ -23,6 +21,7 @@ const events = {
 };
 
 client.on('raw', async event => {
+    // eslint-disable-next-line no-prototype-builtins
     if (!events.hasOwnProperty(event.t)) return;
 
     const {

@@ -1,3 +1,4 @@
+/* eslint-disable no-sync */
 const Discord = require('discord.js');
 const money = require('discord-money');
 const quiz = require('../quiz.json');
@@ -13,7 +14,7 @@ const answer_C = ':regional_indicator_c:';
 const answer_D = ':regional_indicator_d:';
 
 
-module.exports = async (client) => {
+module.exports = async client => {
     console.log('Bot is ready.');
     await client.user.setPresence({
         game: {
@@ -23,20 +24,20 @@ module.exports = async (client) => {
         status: "online"
     });
     const questionChannel = client.channels.find(c => c.id === '663584733862690835')
-    const questionEmbed = new Discord.RichEmbed()
-        .setTimestamp()
-        .setFooter(`Liczy się tylko pierwsza odpowiedź, zastanów się!`)
+    const questionEmbed = new Discord.RichEmbed().
+    setTimestamp().
+    setFooter(`Liczy się tylko pierwsza odpowiedź, zastanów się!`)
     var randomQuestion = quiz[Math.floor(Math.random() * quiz.length)];
 
     if (fs.existsSync('./question.txt')) {
-        fs.readFile('./question.txt', (err, data) => {
-            if (err) throw err;
-            //randomQuestion.question = data;
-            console.log(`Pytanie istnieje. Wczytano treść '${data}'`);
-        });
+        randomQuestion.question = fs.readFileSync('./question.txt', 'utf8');
+        quiz.forEach(q => {
+            if(q.question == randomQuestion.question) randomQuestion.correct_answer = q.correct_answer;
+        })
+        console.log(randomQuestion.question, randomQuestion.correct_answer);
     } else {
         randomQuestion = quiz[Math.floor(Math.random() * quiz.length)];
-        fs.writeFile('./question.txt', randomQuestion.question, (err) => {
+        fs.writeFile('./question.txt', randomQuestion.question, err => {
             if (err) throw err;
             console.log('The file has been saved!');
         });
@@ -51,15 +52,16 @@ module.exports = async (client) => {
             await msg.react('🇧');
             await msg.react('🇨');
             await msg.react('🇩');
-        }).catch(console.error);
+        }).
+        catch(console.error);
     }
-    let rQuestion_tmp = randomQuestion.question;
     const correctMsg = `✅ Wybrałeś poprawną odpowiedź w codziennym quizie, gratulacje!`;
     const incorrectMsg = `❌ Wybrałeś niepoprawną odpowiedź w codziennym quizie, spróbuj następnym razem!`;
-    const losuj_pytanie = new CronJob('0 0 0 * * *', async () => {
+    // const losuj_pytanie = new CronJob('*/20 * * * * *', () => {
+    const losuj_pytanie = new CronJob('0 0 12 * * *', () => {
         client.users.forEach(async user => {
             db.get(`SELECT * FROM moneyset WHERE userID = '${user.id}' AND answer IS NOT NULL`, async (err, row) => {
-                if (err) throw reject(err);
+                if (err) throw err;
                 if (!row) {
                     // var stmt = db.prepare("INSERT INTO moneyset (userID, money, lastDaily, answer) VALUES (?,?,?,?)");
                     // stmt.run(user.id, 0, 'Not Collected', null);
@@ -68,15 +70,14 @@ module.exports = async (client) => {
                     //console.log(row);
                 } else {
                     if (row.answer != null) {
+                        console.log(randomQuestion.question, randomQuestion.correct_answer);
                         if (randomQuestion.correct_answer === row.answer) {
                             const bonus = Math.floor(Math.random() * (500 - 300 + 1)) + 300;
-                            user.send(correctMsg + ` W nagrodę otrzymujesz ${bonus} kredytów. 💰`);
+                            user.send(`${correctMsg} W nagrodę otrzymujesz ${bonus} kredytów. 💰`);
                             await money.updateBal(user.id, bonus);
-                        } else user.send(incorrectMsg + ` Prawidłowa odpowiedź to ${randomQuestion.correct_answer}.`);
-                        db.run(`UPDATE moneyset SET answer = NULL WHERE userID = '${user.id}'`, (err) => {
+                        } else user.send(`${incorrectMsg} Prawidłowa odpowiedź to ${randomQuestion.correct_answer}.`);
+                        db.run(`UPDATE moneyset SET answer = NULL WHERE userID = '${user.id}'`, err => {
                             if (err) throw err;
-                            // console.log(this)
-                            // console.log(`Template literal ${this}`);
                         });
                     }
                 }
@@ -89,7 +90,7 @@ module.exports = async (client) => {
             // prevent same question twice in a row
             //randomQuestion.question === rQuestion_tmp ? randomQuestion = quiz[Math.floor(Math.random() * quiz.length)] : randomQuestion = randomQuestion;
             //rQuestion_tmp = randomQuestion.question;
-            fs.writeFile('./question.txt', randomQuestion.question, (err) => {
+            fs.writeFile('./question.txt', randomQuestion.question, err => {
                 if (err) throw err;
                 console.log(`Zapisano do /question.txt/ pytanie '${randomQuestion.question}'`);
             });
@@ -104,7 +105,8 @@ module.exports = async (client) => {
                 await msg.react('🇧');
                 await msg.react('🇨');
                 await msg.react('🇩');
-            }).catch(console.error);
+            }).
+            catch(console.error);
         }, 3000);
     })
     losuj_pytanie.start();

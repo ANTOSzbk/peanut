@@ -1,6 +1,6 @@
 const money = require('discord-money');
 
-exports.run = async (client, message, args) => {
+exports.run = (client, message, args) => {
         const mentionedUser = message.mentions.users.first();
         if (!args.length) {
             message.reply('🏧 ❌ **Brak lub niepoprawna nazwa użytkownika.** Użyj: \n `!daj [@nazwa_użytkownika] [ilość kredytów]`');
@@ -18,7 +18,7 @@ exports.run = async (client, message, args) => {
             message.reply('🏧 ❌ **Brak lub niepoprawna ilość kredytów [1 - 1000].** Użyj: \n `!daj [@nazwa_użytkownika] [ilość kredytów]`');
             return;
         }
-        money.fetchBal(message.author.id).then(async (i) => {
+        money.fetchBal(message.author.id).then(async i => {
             if (args[1].valueOf() > i.money) {
                 message.reply(`🏧 ❌ **Nie masz tyle siana. Twój stan konta wynosi $${i.money} 💰.**`);
                 return;
@@ -28,3 +28,6 @@ exports.run = async (client, message, args) => {
             message.reply(`🏧 ✔️ **Przekazałeś ${args[1].toString()} kredytów dla użytkownika <@${mentionedUser.id}>.**`)
         })
 }
+
+module.exports.desc = 'Przekaż innemu członkowi serwera swoje kredyty'
+module.exports.args = '@nazwa_użytkownika ilość_kredytów'

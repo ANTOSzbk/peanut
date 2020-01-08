@@ -94,5 +94,37 @@
         "answer_C": "Wampir",
         "answer_D": "Pegaz",
         "correct_answer": "C"
+    },
+    {
+        "question": "Grając Łowcą jaki jest najbardziej prawdopodobny rozkład statystyk na 12 poziomie? (Atak/Obrona/Moc/Wiedza)",
+        "answer_A": "6/6/3/3",
+        "answer_B": "9/3/3/3",
+        "answer_C": "3/9/3/3",
+        "answer_D": "3/6/6/3",
+        "correct_answer": "C"
+    },
+    {
+        "question": "Której z tych jednostek nie zobaczymy w grze?",
+        "answer_A": "Złoty Golem",
+        "answer_B": "Stalowy Golem",
+        "answer_C": "Żelazny Golem",
+        "answer_D": "Skalisty Golem",
+        "correct_answer": "D"
+    },
+    {
+        "question": "Która z jednostek posiada największe AI Value? (współczynnik SI)",
+        "answer_A": "Wiwerna",
+        "answer_B": "Czarci Lord",
+        "answer_C": "Cyklop",
+        "answer_D": "Arcylisz",
+        "correct_answer": "A"
+    },
+    {
+        "question": "Ile jednostek w grze jest odporne na czar 'Antymagia'?",
+        "answer_A": "6",
+        "answer_B": "5",
+        "answer_C": "4",
+        "answer_D": "3",
+        "correct_answer": "B"
     }
 ]

@@ -1,10 +1,9 @@
 const money = require('discord-money');
-const moment = require('moment');
 const Discord = require('discord.js');
 
 const _cooldown = new Discord.Collection();
 
-exports.run = async (client, message, args) => {
+exports.run = (_client, message, _args) => {
     if (message.channel.id != '628638653555671054') return;
     const now = Date.now();
     const expirationDate = _cooldown.get(message.author.id) + this.cooldown;
@@ -12,24 +11,28 @@ exports.run = async (client, message, args) => {
     var hours = Math.floor(timeleft / 3600);
     var minutes = Math.floor((timeleft - (hours * 3600)) / 60);
     var seconds = Math.floor(timeleft - (hours * 3600) - (minutes * 60));
-    const timestring = [hours + ` godzin`, minutes + ` minut`, seconds + ` sekund`];
-    if (parseInt(hours) == 0) timestring.shift();
+    const timestring = [
+        `${hours} godzin`,
+        `${minutes} minut`,
+        `${seconds} sekund`
+    ];
+    if (parseInt(hours, 10) == 0) timestring.shift();
 
-    function getRndInteger(min, max) {
+    var getRndInteger = function getRndInteger (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    bonus = getRndInteger(100, 200);
+    const bonus = getRndInteger(100, 200);
     if (!_cooldown.has(message.author.id)) {
-        money.updateBal(message.author.id, bonus).then((i) => { // The daily ends of the day, so everyday they can get a daily bonus, if they missed it, they can't get it back again.
+        money.updateBal(message.author.id, bonus).then(_i => {
             message.channel.send({
                 embed: {
-                    color: 3447003,
-                    title: `> 💰 Otrzymujesz bonus w wysokości $${bonus}!`,
-                    description: `> 🏧 Aby sprawdzić stan konta użyj \`!balance\`.`,
                     author: {
-                        name: `${message.author.username}#${message.author.discriminator}`,
-                        icon_url: message.author.avatarURL
-                    }
+                        icon_url: message.author.avatarURL,
+                        name: `${message.author.username}#${message.author.discriminator}`
+                    },
+                    color: 3447003,
+                    description: `> 🏧 Aby sprawdzić stan konta użyj \`!balance\`.`,
+                    title: `> 💰 Otrzymujesz bonus w wysokości $${bonus}!`
                 }
             });
         })
@@ -40,16 +43,18 @@ exports.run = async (client, message, args) => {
     } else {
         message.channel.send({
             embed: {
-                color: 3447003,
-                title: `> 🏧 ❌ Otrzymałeś swój dzienny bonus \`!daily\`.`, // When you got your daily already, this message will show up.
-                description: `> Wróć ponownie za ${timestring.join(' ')}.`, 
                 author: {
-                    name: `${message.author.username}#${message.author.discriminator}`,
-                    icon_url: message.author.avatarURL
-                }
+                    icon_url: message.author.avatarURL,
+                    name: `${message.author.username}#${message.author.discriminator}`
+                },
+                color: 3447003,
+                description: `> Wróć ponownie za ${timestring.join(' ')}.`,
+                title: `> 🏧 ❌ Otrzymałeś swój dzienny bonus \`!daily\`.`
+                // When you got your daily already, this message will show up
             }
         });
     }
 }
 
 module.exports.cooldown = 43200000
+module.exports.desc = 'Otrzymaj codzienny bonus kredytów'

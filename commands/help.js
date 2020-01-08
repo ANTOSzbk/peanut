@@ -1,22 +1,32 @@
 const Discord = require('discord.js');
 
 exports.run = (client, message, args) => {
-    const helpEmbed = new Discord.RichEmbed()
-        .setDescription('Dostępne komendy: \n\n\
-                **!pandora** - otwórz sobie puszkę pandory! [aliasy: \`!puszka\`]\n\n\
-                **!yn** - zapytaj Pomocnika Barona :) (tak lub nie) \n\n\
-                **!reload** `[nazwa_komendy/all]` - przeładuj skrypt komendy (tylko administracja) \n\n\
-                **!poll** `[pytanie]` - stwórz pytanie/ankietę widoczną dla wszystkich [aliasy: \`!ankieta, !sonda\`]\n\n\
-                **!h3wiki** `[fraza]` - przeszukaj Wikipedię H3 [aliasy: \`!h3\`]\n\n\
-                **!bswiki** `[fraza]` - przeszukaj Wikipedię Bloodstone [aliasy: \`!bs, !bloodstone\`]\n\n\
-                ** ---------------- KASYNO ----------------** \n\n\
-                **!slots** `[ilość kredytów/all]` - zagraj w grę slots! [aliasy: \`!slot\`]\n\n\
-                **!daily** - otrzymaj codzienny bonus kredytów \n\n\
-                **!balance** - sprawdź balans swojego konta [aliasy: \`!bal, !stankonta\`]\n\n\
-                **!leaderboard** - sprawdź swoją pozycję oraz aktualnych liderów Slots [aliasy: \`!top, !top10, !leaders\`]\n\n\
-                **!daj** `[@nazwa_użytkownika] [ilość kredytów]` - przekaż innemu użytkownikowi swoje kredyty \n\n\
-                ** --------------------------------------------- ** \n\n\
-                *Bot jest nadal w fazie produkcji, więcej wkrótce ;)*')
-        .setColor('BLUE')
-    message.channel.send(helpEmbed);
+    let aliases = {};
+    let cooldown = {};
+    let desc = {};
+    let phrase = {};
+    client.commands.forEach((v, k) => {
+        aliases[k] = v.aliases;
+        cooldown[k] = v.cooldown;
+        desc[k] = v.desc;
+        phrase[k] = v.args;
+    })
+    const helpEmbed = new Discord.RichEmbed().
+    setAuthor(client.user.username, client.user.displayAvatarURL).
+    setColor('BLUE')
+    if (!args.length) {
+        helpEmbed.setTitle(`Dostępne komendy: `)
+        helpEmbed.setDescription(`\n**\`${Object.keys(aliases).join('`, `')}\`**\n\nAby dowiedzieć się więcej o komendzie wpisz: > **\n!help \`komenda\`**`)
+        message.channel.send(helpEmbed);
+    } else {
+        if (!client.commands.has(args.toString())) return message.reply(`Nie znaleziono komendy o nazwie ${args}.`)
+        helpEmbed.setTitle(`> **!${args}**  \`${phrase[args] ? phrase[args] : '\u200b'}\``);
+        helpEmbed.setDescription(`\n${desc[args]}.\n`);
+        if(cooldown[args]) helpEmbed.addField('Użycie możliwe co', `${cooldown[args] / 3600000} godzin.`)
+        if(aliases[args]) helpEmbed.addField('Dostępne aliasy komendy', `\`!${aliases[args].join('`, `!')}\``)
+        message.channel.send(helpEmbed);
+    }
 }
+
+module.exports.desc = 'Wyświetl dostępne komendy/informacje o komendzie';
+module.exports.args = 'brak/komenda'
