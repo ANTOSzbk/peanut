@@ -126,7 +126,9 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
     }
     if (channel.id === questionChannel.id) {
         const emoji = messageReaction.emoji.toString();
-        let _voted = voted.get(user.id) === messageReaction.message.id ? true : false;
+        let _voted = false;
+        _voted = voted.get(user.id) === messageReaction.message.id ? true : false
+        //console.log(_voted);
         let lastUncached = await questionChannel.fetchMessages({ limit: 1 });
         lastUncached = lastUncached.last();
         if(lastUncached.id !== messageReaction.message.id) return console.log(`${user.tag} zareagowal na stare pytanie przy uzyciu ${emoji}.`);
