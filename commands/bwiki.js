@@ -26,7 +26,7 @@ exports.run = (_client, message, args) => {
     const resultEmbed = new Discord.RichEmbed().
     setAuthor('Bloodstone Wiki', 'https://www.bloodstone.com.pl/images/c/c9/Logo.png', 'https://www.bloodstone.com.pl/wiki/Strona_g%C5%82%C3%B3wna').
     setTimestamp().
-    setColor('#668cff')
+    setColor('BLUE')
     if (!args.length) {
         resultEmbed.setDescription(`**Brak frazy do wyszukania.**\nUżyj: \`!bwiki [fraza]\` lub \`!bs [fraza]\``)
         return message.channel.send(resultEmbed);

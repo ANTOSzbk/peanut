@@ -22,11 +22,11 @@ const req = function req (url) {
     return xhr.responseText;
 }
 
-exports.run = (client, message, args) => {
+exports.run = (_client, message, args) => {
     const resultEmbed = new Discord.RichEmbed().
         setAuthor('HoMM 3 Wiki [ENG]', 'https://heroes.thelazy.net/images/a/a6/H3logo.png', 'https://heroes.thelazy.net/index.php/Main_Page').
         setTimestamp().
-        setColor('#668cff')
+        setColor('BLUE')
     if (!args.length) {
         resultEmbed.setDescription(`**Brak frazy do wyszukania.**\nUżyj: \`!h3wiki [fraza]\` lub \`!h3 [fraza]\``)
         return message.channel.send(resultEmbed);
