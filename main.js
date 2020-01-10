@@ -11,8 +11,6 @@ const client = new Discord.Client();
 const voted = new Map();
 
 
-let db = new sqlite3.Database('./userMoney.sqlite');
-
 client.config = config;
 
 const events = {
@@ -73,10 +71,9 @@ fs.readdir("./commands/", (err, files) => {
 });
 
 client.on('messageReactionAdd', async (messageReaction, user) => {
-
     let channel = messageReaction.message.channel;
     let gMember = messageReaction.message.guild.member(user);
-    const questionChannel = client.channels.find(c => c.id === '663584733862690835')
+    const questionChannel = client.channels.find(c => c.id === '629329206576152599')
     if (user.bot) return;
     if (channel.name === 'wybierz-role') {
         const emoji = messageReaction.emoji.toString();
@@ -132,6 +129,7 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
         let lastUncached = await questionChannel.fetchMessages({ limit: 1 });
         lastUncached = lastUncached.last();
         if(lastUncached.id !== messageReaction.message.id) return console.log(`${user.tag} zareagowal na stare pytanie przy uzyciu ${emoji}.`);
+        let db = new sqlite3.Database('./userMoney.sqlite');
         db.get(`SELECT * FROM moneyset WHERE userID = '${gMember.user.id}'`, async (err, row) => {
             if (err) throw err;
             if (!row) {
@@ -176,7 +174,7 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
                     break;
             }
         })
-
+        db.close();
     }
 });
 

@@ -16,7 +16,7 @@ exports.run = (client, message, args) => {
     setColor('BLUE')
     if (!args.length) {
         helpEmbed.setTitle(`Dostępne komendy: `)
-        helpEmbed.setDescription(`\n**\`${Object.keys(aliases).join('`, `')}\`**\n\nAby dowiedzieć się więcej o komendzie wpisz: > **\n!help \`komenda\`**`)
+        helpEmbed.setDescription(`\n**\`${Object.keys(aliases).join('`, `')}\`**\n\nAby dowiedzieć się więcej o komendzie wpisz: **\n> !help \`komenda\`**`)
         message.channel.send(helpEmbed);
     } else {
         if (!client.commands.has(args.toString())) return message.reply(`Nie znaleziono komendy o nazwie ${args}.`)

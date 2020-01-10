@@ -23,7 +23,7 @@ module.exports = async client => {
         },
         status: "online"
     });
-    const questionChannel = client.channels.find(c => c.id === '663584733862690835')
+    const questionChannel = client.channels.find(c => c.id === '629329206576152599')
     const questionEmbed = new Discord.RichEmbed().
     setAuthor(`Codzienne pytanie`, `https://img.icons8.com/plasticine/2x/question-mark.png`).
     setTimestamp().
@@ -55,9 +55,10 @@ module.exports = async client => {
     }
     const correctMsg = `✅ Wybrałeś poprawną odpowiedź w codziennym quizie, gratulacje!`;
     const incorrectMsg = `❌ Wybrałeś niepoprawną odpowiedź w codziennym quizie, spróbuj następnym razem!`;
-    // const losuj_pytanie = new CronJob('*/20 * * * * *', () => {
-    const losuj_pytanie = new CronJob('0 0 16 * * *', () => {
+    const losuj_pytanie = new CronJob('*/20 * * * * *', () => {
+    // const losuj_pytanie = new CronJob('0 0 17 * * *', () => {
         let db = new sqlite3.Database('./userMoney.sqlite');
+        const correct = new Map();
         db.all(`SELECT * FROM moneyset WHERE answer IS NOT NULL`, (err, rows) => {
             let aString = randomQuestion[`answer_${randomQuestion.correct_answer}`];
             if (err) throw err;
@@ -67,14 +68,17 @@ module.exports = async client => {
                     if (randomQuestion.correct_answer === row.answer) {
                         const bonus = Math.floor(Math.random() * (500 - 300 + 1)) + 300;
                         user.send(`${correctMsg} \nW nagrodę otrzymujesz **${bonus}** kredytów. 💰`);
+                        correct.set(user.id, bonus);
                         money.updateBal(user.id, bonus);
                     } else user.send(`${incorrectMsg} \nPrawidłowa odpowiedź to **${randomQuestion.correct_answer}** - **${aString}**.`);
                 } else console.log(`Uzytkownik o id '${row.userID}' odpowiedzial na pytanie, lecz jest nieosiagalny.`);
             }
             console.log(`Wyslano wiadomosc o odpowiedzi na pytanie do ${rows.length} uzytkownikow.`)
      });
+
      db.close();
         setTimeout(() => {
+            console.log(correct);
             db = new sqlite3.Database('./userMoney.sqlite');
             db.run(`UPDATE moneyset SET answer = NULL WHERE answer IS NOT NULL`, updateErr => {
                 if (updateErr) throw updateErr;

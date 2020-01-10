@@ -42,6 +42,7 @@ exports.run = (client, message, _args) => {
             embed
         });
     });
+    db.close();
 }
 
 module.exports.aliases = [
