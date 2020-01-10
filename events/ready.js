@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-sync */
 const Discord = require('discord.js');
-const money = require('discord-money');
 const quiz = require('../quiz.json');
 const CronJob = require('cron').CronJob;
 const fs = require('fs');
@@ -55,12 +54,13 @@ module.exports = async client => {
     }
     const correctMsg = `✅ Wybrałeś poprawną odpowiedź w codziennym quizie, gratulacje!`;
     const incorrectMsg = `❌ Wybrałeś niepoprawną odpowiedź w codziennym quizie, spróbuj następnym razem!`;
-    const losuj_pytanie = new CronJob('*/20 * * * * *', () => {
-    // const losuj_pytanie = new CronJob('0 0 17 * * *', () => {
+
+    // const losuj_pytanie = new CronJob('*/20 * * * * *', () => {
+    const losuj_pytanie = new CronJob('0 0 12 * * *', () => {
         let db = new sqlite3.Database('./userMoney.sqlite');
-        const correct = new Map();
         db.all(`SELECT * FROM moneyset WHERE answer IS NOT NULL`, (err, rows) => {
             let aString = randomQuestion[`answer_${randomQuestion.correct_answer}`];
+            let n = 0;
             if (err) throw err;
             for (let row of rows) {
                 if (client.users.has(row.userID)) {
@@ -68,25 +68,24 @@ module.exports = async client => {
                     if (randomQuestion.correct_answer === row.answer) {
                         const bonus = Math.floor(Math.random() * (500 - 300 + 1)) + 300;
                         user.send(`${correctMsg} \nW nagrodę otrzymujesz **${bonus}** kredytów. 💰`);
-                        correct.set(user.id, bonus);
-                        money.updateBal(user.id, bonus);
+                        db.run(`UPDATE moneyset SET money = '${row.money + bonus}' WHERE userID = '${user.id}'`)
                     } else user.send(`${incorrectMsg} \nPrawidłowa odpowiedź to **${randomQuestion.correct_answer}** - **${aString}**.`);
-                } else console.log(`Uzytkownik o id '${row.userID}' odpowiedzial na pytanie, lecz jest nieosiagalny.`);
+                } else {
+                    console.log(`Uzytkownik o id '${row.userID}' odpowiedzial na pytanie, lecz jest nieosiagalny.`);
+                    n += 1;
+                }
             }
-            console.log(`Wyslano wiadomosc o odpowiedzi na pytanie do ${rows.length} uzytkownikow.`)
-     });
-
-     db.close();
+            console.log(`Wyslano wiadomosc o odpowiedzi na pytanie do ${rows.length - n} uzytkownikow.`)
+        });
+        db.close();
         setTimeout(() => {
-            console.log(correct);
             db = new sqlite3.Database('./userMoney.sqlite');
             db.run(`UPDATE moneyset SET answer = NULL WHERE answer IS NOT NULL`, updateErr => {
                 if (updateErr) throw updateErr;
             });
+
             randomQuestion = quiz[Math.floor(Math.random() * quiz.length)]
-            // prevent same question twice in a row
-            //randomQuestion.question === rQuestion_tmp ? randomQuestion = quiz[Math.floor(Math.random() * quiz.length)] : randomQuestion = randomQuestion;
-            //rQuestion_tmp = randomQuestion.question;
+
             fs.writeFile('./question.txt', randomQuestion.question, err => {
                 if (err) throw err;
                 console.log(`Zapisano do /question.txt/ pytanie '${randomQuestion.question}'`);
