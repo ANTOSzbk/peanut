@@ -10,6 +10,9 @@
     "type": "git",
     "url": "ANTOSzbk"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "keywords": [
     "bot",
     "discord",
@@ -29,6 +32,8 @@
     "fs": "0.0.1-security",
     "moment": "^2.24.0",
     "node-cron": "^2.0.3",
+    "node-gyp": "^6.1.0",
+    "rebuild": "^0.1.2",
     "sqlite": "^3.0.3",
     "sqlite3": "^4.1.1",
     "wikiapi": "^1.7.0",
