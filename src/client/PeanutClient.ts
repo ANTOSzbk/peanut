@@ -4,12 +4,20 @@ import {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
+import { Message } from 'discord.js';
+import HasuraProvider from '../helpers/SettingsProvider';
+import { EVENTS, TOPICS, LoggerProvider } from '../helpers/LoggerProvider';
+import { SETTINGS } from '../utils/constants';
+import { Logger } from 'winston';
 import { join } from 'path';
+import { MESSAGES } from '../utils/messages';
 
 declare module 'discord-akairo' {
   interface AkairoClient {
     commandHandler: CommandHandler;
     config: PeanutOptions;
+    settings: HasuraProvider;
+    logger: Logger;
   }
 }
 
@@ -19,11 +27,18 @@ interface PeanutOptions {
 }
 
 export default class PeanutClient extends AkairoClient {
+  public settings = new HasuraProvider();
+  public logger = LoggerProvider;
+
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: join(__dirname, '..', 'commands'),
-    // TODO: guild prefix integration
-    prefix: '?',
-    //
+    prefix: (message: Message): string => {
+      return this.settings.get(
+        message.guild!,
+        SETTINGS.PREFIX,
+        process.env.COMMAND_PREFIX
+      );
+    },
     aliasReplacement: /-/g,
     allowMention: true,
     handleEdits: true,
@@ -55,19 +70,26 @@ export default class PeanutClient extends AkairoClient {
   }
 
   private async _init() {
-    // async proto because of possible API feature
-
-    this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
-    this.commandHandler.useListenerHandler(this.listenerHandler);
-    this.listenerHandler.setEmitters({
-      commandHandler: this.commandHandler,
-      inhibitorHandler: this.inhibitorHandler,
-      listenerHandler: this.listenerHandler,
-    });
-
     this.commandHandler.loadAll();
+    this.logger.info(MESSAGES.COMMAND_HANDLER.LOADED, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
     this.inhibitorHandler.loadAll();
+    this.logger.info(MESSAGES.INHIBITOR_HANDLER.LOADED, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
     this.listenerHandler.loadAll();
+    this.logger.info(MESSAGES.LISTENER_HANDLER.LOADED, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
+    await this.settings.init();
+    this.logger.info(MESSAGES.SETTINGS.INIT, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
   }
 
   public async start() {
