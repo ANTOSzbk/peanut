@@ -103,6 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
-.invitelink
+.*
 
 hasura
+codegen.yml
+graphql.schema.json
