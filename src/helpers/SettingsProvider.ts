@@ -51,10 +51,9 @@ export default class HasuraProvider extends Provider {
         settings: data,
       },
     });
-
     let settings: GraphQLSettings;
-    if (PRODUCTION) settings = res.insert_Settings.returning[0];
-    else settings = res.insert_SettingsDev.returning[0];
+    if (PRODUCTION) settings = res.insert_settings.returning[0];
+    else settings = res.insert_settingsDev.returning[0];
     return settings;
   }
 
@@ -72,8 +71,8 @@ export default class HasuraProvider extends Provider {
     });
 
     let settings: GraphQLSettings;
-    if (PRODUCTION) settings = res.insert_Settings.returning[0];
-    else settings = res.insert_SettingsDev.returning[0];
+    if (PRODUCTION) settings = res.insert_settings.returning[0];
+    else settings = res.insert_settingsDev.returning[0];
     return settings;
   }
 
@@ -89,8 +88,8 @@ export default class HasuraProvider extends Provider {
     });
 
     let settings: GraphQLSettings;
-    if (PRODUCTION) settings = res.insert_Settings.returning[0];
-    else settings = res.insert_SettingsDev.returning[0];
+    if (PRODUCTION) settings = res.delete_settings.returning[0];
+    else settings = res.delete_settingsDev.returning[0];
     return settings;
   }
 

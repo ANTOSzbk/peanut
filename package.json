@@ -7,8 +7,8 @@
     "build": "npx tsc",
     "develop": "nodemon",
     "start": "node build/app.js",
-    "static-analyze": "npx eslint src/* --ext .ts",
-    "fix": "npx eslint src/* --ext .ts --fix",
+    "lint": "npx eslint src/* --ext .ts",
+    "lint:fix": "npx eslint src/* --ext .ts --fix",
     "generate": "graphql-codegen --config codegen.yml"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "apollo-link-http": "^1.5.17",
     "body-parser": "^1.19.0",
     "chalk": "^4.0.0",
+    "common-tags": "^1.8.0",
     "discord-akairo": "^8.0.0",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
@@ -46,6 +47,7 @@
     "@graphql-codegen/introspection": "^1.13.5",
     "@graphql-codegen/typescript": "1.13.5",
     "@graphql-codegen/typescript-resolvers": "^1.13.5",
+    "@types/common-tags": "^1.8.0",
     "@types/node": "^13.13.4",
     "@types/node-fetch": "^2.5.7",
     "@types/ws": "^7.2.4",

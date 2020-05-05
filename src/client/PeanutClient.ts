@@ -4,7 +4,7 @@ import {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { Message, Collection, Webhook } from 'discord.js';
 import HasuraProvider from '../helpers/SettingsProvider';
 import { EVENTS, TOPICS, LoggerProvider } from '../helpers/LoggerProvider';
 import { SETTINGS } from '../utils/constants';
@@ -17,6 +17,7 @@ declare module 'discord-akairo' {
     commandHandler: CommandHandler;
     config: PeanutOptions;
     settings: HasuraProvider;
+    webhooks: Collection<string, Webhook>;
     logger: Logger;
   }
 }
@@ -32,19 +33,32 @@ export default class PeanutClient extends AkairoClient {
 
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: join(__dirname, '..', 'commands'),
-    prefix: (message: Message): string => {
-      return this.settings.get(
+    prefix: (message: Message): string =>
+      this.settings.get(
         message.guild!,
         SETTINGS.PREFIX,
         process.env.COMMAND_PREFIX
-      );
-    },
+      ),
     aliasReplacement: /-/g,
     allowMention: true,
     handleEdits: true,
     commandUtil: true,
     commandUtilLifetime: 3e5,
     defaultCooldown: 3000,
+    argumentDefaults: {
+      prompt: {
+        modifyStart: (_, str) =>
+          MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_START(str),
+        modifyRetry: (_, str) =>
+          MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_RETRY(str),
+        timeout: MESSAGES.COMMAND_HANDLER.PROMPT.TIMEOUT,
+        ended: MESSAGES.COMMAND_HANDLER.PROMPT.ENDED,
+        cancel: MESSAGES.COMMAND_HANDLER.PROMPT.CANCEL,
+        retries: 3,
+        time: 30000,
+      },
+      otherwise: '',
+    },
   });
 
   public inhibitorHandler = new InhibitorHandler(this, {
@@ -67,6 +81,14 @@ export default class PeanutClient extends AkairoClient {
     );
 
     this.config = config;
+
+    process.on('unhandledRejection', (err: any) =>
+      this.logger.error(err, { topic: TOPICS.UNHANDLED_REJECTION })
+    );
+
+    if (process.env.LOGS) {
+      this.webhooks = new Collection();
+    }
   }
 
   private async _init() {
