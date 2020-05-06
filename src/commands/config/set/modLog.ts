@@ -3,6 +3,7 @@ import { Message, Permissions, TextChannel } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
 import { MESSAGES } from '../../../utils/messages';
 import CreateChannelCommand from '../createChannel';
+import { getGuildChannels } from '../../../helpers/guildData';
 
 export default class SetConfigModChannelCommand extends Command {
   public constructor() {
@@ -52,9 +53,7 @@ export default class SetConfigModChannelCommand extends Command {
         MESSAGES.COMMANDS.CONFIG.SET.MOD_LOG.REPLY(createdChannel.name)
       );
     } else {
-      const channels = Array.from(guild.channels.cache.values()).filter(
-        (channel) => channel.type === 'text'
-      );
+      const channels = getGuildChannels(message.guild!);
       this.client.settings.set(guild, SETTINGS.MOD_LOG, channels[channel].id);
       return message.util?.reply(
         MESSAGES.COMMANDS.CONFIG.SET.MOD_LOG.REPLY(channels[channel - 1].name)

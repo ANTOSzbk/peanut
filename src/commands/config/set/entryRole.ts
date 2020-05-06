@@ -1,8 +1,9 @@
-import { Argument, Command, Flag } from 'discord-akairo';
+import { Argument, Command, Flag, ClientUtil } from 'discord-akairo';
 import { Message, Permissions, Role } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
 import { MESSAGES } from '../../../utils/messages';
 import CreateRoleCommand from '../createRole';
+import { getGuildRoles } from '../../../helpers/guildData';
 
 export default class SetConfigEntryRoleCommand extends Command {
   public constructor() {
@@ -20,10 +21,24 @@ export default class SetConfigEntryRoleCommand extends Command {
         {
           id: 'role',
           match: 'content',
-          type: Argument.union('number', 'role'),
+          type: (message, phrase) => {
+            const num = parseInt(phrase);
+            const role = this.client.util.resolveRole(
+              phrase,
+              message.guild!.roles.cache,
+              false,
+              true
+            );
+            if (role) return role;
+            if (!phrase || isNaN(num)) return null;
+            if (num < 0 || num > getGuildRoles(message.guild!).length)
+              return null;
+            return phrase;
+          },
           prompt: {
             start: (message: Message) =>
               MESSAGES.COMMANDS.CONFIG.SET.ENTRY_ROLE.PROMPT.START(message),
+            retry: `You must provide valid Role resolvable or number.`,
           },
         },
       ],
@@ -55,9 +70,7 @@ export default class SetConfigEntryRoleCommand extends Command {
         MESSAGES.COMMANDS.CONFIG.SET.ENTRY_ROLE.REPLY(newRole.name)
       );
     } else {
-      const roles = Array.from(message.guild!.roles.cache.values()).filter(
-        (role) => !role.managed && message.guild!.roles.everyone !== role
-      );
+      const roles = getGuildRoles(message.guild!);
       this.client.settings.set(
         message.guild!,
         SETTINGS.ENTRY_ROLE,

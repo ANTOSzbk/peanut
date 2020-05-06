@@ -55,7 +55,7 @@ export default class PeanutClient extends AkairoClient {
         ended: MESSAGES.COMMAND_HANDLER.PROMPT.ENDED,
         cancel: MESSAGES.COMMAND_HANDLER.PROMPT.CANCEL,
         retries: 3,
-        time: 30000,
+        time: 40000,
       },
       otherwise: '',
     },

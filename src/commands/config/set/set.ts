@@ -39,6 +39,7 @@ export default class SetConfigCommand extends Command {
         return MESSAGES.COMMANDS.CONFIG.SET.REPLY(prefix);
       },
     };
+    //console.log(key);
     return Flag.continue(key);
   }
 }

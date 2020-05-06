@@ -3,6 +3,7 @@ import { Message, Permissions, Role } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
 import { MESSAGES } from '../../../utils/messages';
 import CreateRoleCommand from '../createRole';
+import { getGuildRoles } from '../../../helpers/guildData';
 
 export default class SetConfigModRoleCommand extends Command {
   public constructor() {
@@ -50,9 +51,7 @@ export default class SetConfigModRoleCommand extends Command {
         MESSAGES.COMMANDS.CONFIG.SET.MOD.REPLY(newRole.name)
       );
     } else {
-      const roles = Array.from(message.guild!.roles.cache.values()).filter(
-        (role) => !role.managed && message.guild!.roles.everyone !== role
-      );
+      const roles = getGuildRoles(message.guild!);
       this.client.settings.set(
         message.guild!,
         SETTINGS.MOD_ROLE,

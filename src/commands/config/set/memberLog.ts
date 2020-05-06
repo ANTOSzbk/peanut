@@ -3,6 +3,7 @@ import { Message, Permissions, TextChannel } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
 import { MESSAGES } from '../../../utils/messages';
 import CreateChannelCommand from '../createChannel';
+import { getGuildChannels } from '../../../helpers/guildData';
 
 export default class SetConfigMemberLogCommand extends Command {
   public constructor() {
@@ -29,9 +30,8 @@ export default class SetConfigMemberLogCommand extends Command {
         {
           id: 'mention',
           type: (_message, phrase) => {
-            console.log(phrase);
-            if (phrase.toLowerCase() === 'yes') return phrase;
-            if (phrase.toLowerCase() === 'no') return phrase;
+            if (phrase.toLowerCase() === 'yes' || phrase.toLowerCase() === 'no')
+              return phrase;
             else return null;
           },
           prompt: {
@@ -76,9 +76,7 @@ export default class SetConfigMemberLogCommand extends Command {
         MESSAGES.COMMANDS.CONFIG.SET.MEMBER_LOG.REPLY(createdChannel.name)
       );
     } else {
-      const channels = Array.from(guild.channels.cache.values()).filter(
-        (channel) => channel.type === 'text'
-      );
+      const channels = getGuildChannels(message.guild!);
       memberlog.ID = channels[channel - 1].id;
       this.client.settings.set(guild, SETTINGS.MEMBER_LOG, memberlog);
       return message.util?.reply(

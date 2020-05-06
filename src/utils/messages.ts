@@ -1,7 +1,12 @@
 import { yellow, blue } from 'chalk';
 import { stripIndents } from 'common-tags';
-import { User, Guild, Webhook, TextChannel, Message } from 'discord.js';
-import { Role } from 'discord.js';
+import { User, Guild, Webhook, TextChannel, Message, Role } from 'discord.js';
+import {
+  getGuildChannels,
+  getGuildRoles,
+  getGuildWebhooks,
+} from '../helpers/guildData';
+import { PrefixSupplier } from 'discord-akairo';
 
 export const MESSAGES = {
   SETTINGS: {
@@ -102,13 +107,80 @@ export const MESSAGES = {
             `${author}, type in the new channel name.`,
         },
         EXISTS: (channel: string) =>
-          `role with name ${channel} already exists.`,
+          `channel with name ${channel} already exists.`,
         REPLY: (channel: TextChannel) =>
-          `successfully created role with name **${channel.name}**.`,
+          `successfully created channel with name **${channel.name}**.`,
       },
       CLEAR: {
         DESCRIPTION: 'Clears the guild config.',
         REPLY: 'cleared the guild config.',
+      },
+      CHECK: {
+        DESCRIPTION: 'Checks the guild config.',
+      },
+      START: {
+        DESCRIPTION: 'Starts the configuration wizard.',
+        EMPTY: (
+          prefix: string | string[] | Promise<string | string[]>
+        ) => stripIndents`it seems like you are all set up. You can change now your configuration manually via \`${prefix}config <set/toggle>\`.
+        If you want to use different prefix for your commands use \`${prefix}prefix <prefix>\`.
+        To check your current configuration use \`${prefix}config check\``,
+        FINISHED: (prefix: string | string[] | Promise<string | string[]>) =>
+          stripIndents`config wizard sucessfully finished. You can change now your configuration manually via \`${prefix}config <set/toggle>\`.
+          If you want to use different prefix for your commands use \`${prefix}prefix <prefix>\`.
+          To check your current configuration use \`${prefix}config check\``,
+      },
+      TOGGLE: {
+        DESCRIPTION: 'Toggles a value in the config.',
+        REPLY: (
+          prefix: string | string[] | Promise<string | string[]>
+        ) => stripIndents`
+					Available keys for \`toggle\` are: \`mod/moderation\`.
+					Check \`${prefix}help config\` for more information.
+				`,
+
+        MOD: {
+          DESCRIPTION: 'Toggle moderation features on the server.',
+          REPLY_ACTIVATED: 'successfully activated moderation commands!',
+          REPLY_DEACTIVATED: 'successfully deactivated moderation commands!',
+        },
+      },
+      DELETE: {
+        DESCRIPTION: 'Deletes a value to the config.',
+        REPLY: (
+          prefix: string | string[] | Promise<string | string[]>
+        ) => stripIndents`
+					When you beg me so much I just can't not help you~
+					Check \`${prefix}help config\` for more information.
+				`,
+        GUILD_LOG: {
+          DESCRIPTION: 'Deletes logs on the server.',
+          REPLY: 'deleted guild log channel.',
+        },
+
+        MEMBER_LOG: {
+          DESCRIPTION: 'Deletes member log on the server.',
+          REPLY: 'deleted member log channel.',
+        },
+
+        MOD: {
+          DESCRIPTION: 'Deletes the mod role.',
+          REPLY: 'deleted moderation role.',
+        },
+
+        MOD_LOG: {
+          DESCRIPTION: 'Deletes the mod log.',
+          REPLY: 'deleted moderation log channel.',
+        },
+
+        MUTE: {
+          DESCRIPTION: 'Deletes the mute role of the guild.',
+          REPLY: 'deleted mute role.',
+        },
+        ENTRY_ROLE: {
+          DESCRIPTION: 'Deletes the entry role of the guild.',
+          REPLY: 'deleted entry role.',
+        },
       },
       SET: {
         DESCRIPTION: 'Sets a value to the config.',
@@ -187,17 +259,11 @@ export const MESSAGES = {
           DESCRIPTION: 'Sets entry role of the guild.',
           PROMPT: {
             START: async (message: Message) => {
-              const roles = Array.from(message.guild!.roles.cache.values());
-
+              const roles = getGuildRoles(message.guild!);
               const options = [`**0** - create new entry Role`];
-              roles
-                .filter(
-                  (role) =>
-                    !role.managed && message.guild!.roles.everyone !== role
-                )
-                .forEach((role, i) =>
-                  options.push(`**${i + 1}** - <@&${role.id}>`)
-                );
+              roles.forEach((role, i) =>
+                options.push(`**${i + 1}** - <@&${role.id}>`)
+              );
               return stripIndents(`${
                 message.author
               }, what role should become entry Role?
@@ -212,14 +278,11 @@ export const MESSAGES = {
           DESCRIPTION: 'Sets guild log on the server.',
           PROMPT: {
             START: async (author: User | null, guild: Guild | null) => {
-              const webhooks = Array.from(
-                (await guild!.fetchWebhooks()).values()
-              );
+              const webhooks = await getGuildWebhooks(guild!);
               const options: any[] = [`**0** - create new Webhook`];
               webhooks.forEach((webhook, i) =>
                 options.push(`**${i + 1}** - ${webhook.name} - [${webhook.id}]`)
               );
-
               return stripIndents(`${author}, what Webhook should send the messages?
               Available options:
               ${options.join('\n')}`);
@@ -234,15 +297,11 @@ export const MESSAGES = {
             `set member log channel to **${channel}**`,
           PROMPT: {
             START: (message: Message) => {
-              const channels = Array.from(
-                message.guild!.channels.cache.values()
-              );
+              const channels = getGuildChannels(message.guild!);
               const options: any[] = [`**0** - create new member log Channel`];
-              channels
-                .filter((channel) => channel.type === 'text')
-                .forEach((channel, i) =>
-                  options.push(`**${i + 1}** - <#${channel.id}>`)
-                );
+              channels.forEach((channel, i) =>
+                options.push(`**${i + 1}** - <#${channel.id}>`)
+              );
               return stripIndents(`${
                 message.author
               }, what Channel should be member log channel?
@@ -262,17 +321,11 @@ export const MESSAGES = {
           REPLY: (role: string) => `set moderation role to **${role}**`,
           PROMPT: {
             START: async (message: Message) => {
-              const roles = Array.from(message.guild!.roles.cache.values());
-
-              const options = [`**0** - create new Moderator Role`];
-              roles
-                .filter(
-                  (role) =>
-                    !role.managed && message.guild!.roles.everyone !== role
-                )
-                .forEach((role, i) =>
-                  options.push(`**${i + 1}** - <@&${role.id}>`)
-                );
+              const roles = getGuildRoles(message.guild!);
+              const options = [`**0** - create new moderator Role`];
+              roles.forEach((role, i) =>
+                options.push(`**${i + 1}** - <@&${role.id}>`)
+              );
               return stripIndents(`${
                 message.author
               }, what Role should become moderator Role?
@@ -287,15 +340,11 @@ export const MESSAGES = {
             'Sets the mod log many of the commands use to log moderation actions.',
           PROMPT: {
             START: (message: Message) => {
-              const channels = Array.from(
-                message.guild!.channels.cache.values()
-              );
+              const channels = getGuildChannels(message.guild!);
               const options: any[] = [`**0** - create new mod log Channel`];
-              channels
-                .filter((channel) => channel.type === 'text')
-                .forEach((channel, i) =>
-                  options.push(`**${i + 1}** - <#${channel.id}>`)
-                );
+              channels.forEach((channel, i) =>
+                options.push(`**${i + 1}** - <#${channel.id}>`)
+              );
               return stripIndents(`${
                 message.author
               }, what Channel should be mod log channel?
@@ -312,16 +361,11 @@ export const MESSAGES = {
           REPLY: (role: string) => `set mute role to **${role}**`,
           PROMPT: {
             START: async (message: Message) => {
-              const roles = Array.from(message.guild!.roles.cache.values());
+              const roles = getGuildRoles(message.guild!);
               const options = [`**0** - create new mute Role`];
-              roles
-                .filter(
-                  (role) =>
-                    !role.managed && message.guild!.roles.everyone !== role
-                )
-                .forEach((role, i) =>
-                  options.push(`**${i + 1}** - <@&${role.id}>`)
-                );
+              roles.forEach((role, i) =>
+                options.push(`**${i + 1}** - <@&${role.id}>`)
+              );
               return stripIndents(`${
                 message.author
               }, what Role should become mute Role?

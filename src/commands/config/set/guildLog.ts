@@ -3,6 +3,7 @@ import { Message, Permissions } from 'discord.js';
 import { MESSAGES } from '../../../utils/messages';
 import { SETTINGS } from '../../../utils/constants';
 import CreateWebhookCommand from '../createWebhook';
+import { getGuildWebhooks } from '../../../helpers/guildData';
 
 export default class SetConfigGuildLogCommand extends Command {
   public constructor() {
@@ -45,7 +46,7 @@ export default class SetConfigGuildLogCommand extends Command {
       this.client.webhooks.set(wh.id, wh);
       this.client.settings.set(guild, SETTINGS.GUILD_LOG, wh.id);
     } else {
-      const webhooks = Array.from((await guild.fetchWebhooks()).values());
+      const webhooks = await getGuildWebhooks(message.guild!);
       this.client.settings.set(
         guild,
         SETTINGS.GUILD_LOG,

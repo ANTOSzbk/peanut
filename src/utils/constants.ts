@@ -28,3 +28,19 @@ export interface Settings {
     MENTION: boolean;
   };
 }
+
+export enum COLORS {
+  BAN = 16718080,
+  UNBAN = 8450847,
+  SOFTBAN = 16745216,
+  KICK = 16745216,
+  MUTE = 16763904,
+  EMBED = 16776960,
+  EMOJI = 16776960,
+  REACTION = 16776960,
+  TAG = 16776960,
+  WARN = 16776960,
+
+  MEMBER_JOIN = 8450847,
+  MEMBER_LEFT = 16745216,
+}

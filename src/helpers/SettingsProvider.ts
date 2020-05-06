@@ -78,18 +78,18 @@ export default class HasuraProvider extends Provider {
 
   public async clear(guild: string | Guild) {
     const id = this.constructor.getGuildId(guild);
-    this.items.delete(id);
-
+    this.items.set(id, {});
     const { data: res } = await graphQLClient.mutate<any, SettingsInsertInput>({
-      mutation: MUTATION.DELETE_SETTINGS,
+      mutation: MUTATION.UPDATE_SETTINGS,
       variables: {
         guild: id,
+        settings: {},
       },
     });
 
     let settings: GraphQLSettings;
-    if (PRODUCTION) settings = res.delete_settings.returning[0];
-    else settings = res.delete_settingsDev.returning[0];
+    if (PRODUCTION) settings = res.insert_settings.returning[0];
+    else settings = res.insert_settingsDev.returning[0];
     return settings;
   }
 
