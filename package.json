@@ -9,7 +9,7 @@
     "start": "node build/app.js",
     "lint": "npx eslint src/* --ext .ts",
     "lint:fix": "npx eslint src/* --ext .ts --fix",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml -r dotenv/config"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   "author": "ANTOSzbk <adi@antoszbk.xyz>",
   "license": "MIT",
   "dependencies": {
+    "@naval-base/ms": "^3.1.0",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.17",

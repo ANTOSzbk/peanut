@@ -3,7 +3,7 @@ import { Message, Permissions } from 'discord.js';
 import { MESSAGES } from '../../../utils/messages';
 import { SETTINGS } from '../../../utils/constants';
 import CreateWebhookCommand from '../createWebhook';
-import { getGuildWebhooks } from '../../../helpers/guildData';
+import { getGuildWebhooks } from '../../../helpers/structures/PeanutGuild';
 
 export default class SetConfigGuildLogCommand extends Command {
   public constructor() {

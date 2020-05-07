@@ -5,7 +5,7 @@ import {
   getGuildChannels,
   getGuildRoles,
   getGuildWebhooks,
-} from '../helpers/guildData';
+} from '../helpers/structures/PeanutGuild';
 import { PrefixSupplier } from 'discord-akairo';
 
 export const MESSAGES = {
@@ -120,6 +120,10 @@ export const MESSAGES = {
       },
       START: {
         DESCRIPTION: 'Starts the configuration wizard.',
+        SKIP: (skipped: string[]) =>
+          stripIndents`following modules were skipped due to being already set: \`${skipped.join(
+            '`, `'
+          )}\``,
         EMPTY: (
           prefix: string | string[] | Promise<string | string[]>
         ) => stripIndents`it seems like you are all set up. You can change now your configuration manually via \`${prefix}config <set/toggle>\`.
@@ -156,6 +160,11 @@ export const MESSAGES = {
         GUILD_LOG: {
           DESCRIPTION: 'Deletes logs on the server.',
           REPLY: 'deleted guild log channel.',
+        },
+
+        CASES: {
+          DESCRIPTION: 'Deletes the case number of the guild.',
+          REPLY: 'deleted cases.',
         },
 
         MEMBER_LOG: {
@@ -375,6 +384,188 @@ export const MESSAGES = {
           },
         },
       },
+    },
+    MOD: {
+      CASES: {
+        DESCRIPTION: stripIndents`Available methods:
+					 • show \`<number>\`
+					 • delete \`<number>\`
+					Required: \`<>\` | Optional: \`[]\`
+				`,
+        REPLY: (
+          prefix: string | string[] | Promise<string | string[]>
+        ) => stripIndents`
+					When you beg me so much I just can't not help you~
+					Check \`${prefix}help cases\` for more information.
+				`,
+
+        DELETE: {
+          DESCRIPTION: 'Delete a case from the database.',
+          PROMPT: {
+            START: (author: User | null) =>
+              `${author}, what case do you want to delete?`,
+            RETRY: (author: User | null) =>
+              `${author}, please enter a case number.`,
+          },
+          NO_CASE_NUMBER: 'at least provide me with a correct number.',
+          NO_CASE:
+            "I looked where I could, but I couldn't find a case with that Id, maybe look for something that actually exists next time!",
+          DELETE: 'You sure you want me to delete this case?',
+          DELETING: (id: number) => `Deleting **${id}**...`,
+          TIMEOUT: 'timed out. Cancelled delete.',
+          CANCEL: 'cancelled delete.',
+          REPLY: (id: number) => `Successfully deleted case **${id}**`,
+        },
+
+        SHOW: {
+          DESCRIPTION: 'Inspect a case, pulled from the database.',
+          PROMPT: {
+            START: (author: User | null) =>
+              `${author}, what case do you want to look up?`,
+            RETRY: (author: User | null) =>
+              `${author}, please enter a case number.`,
+          },
+          NO_CASE_NUMBER: 'at least provide me with a correct number.',
+          NO_CASE:
+            "I looked where I could, but I couldn't find a case with that Id, maybe look for something that actually exists next time!",
+        },
+      },
+      BAN: {
+        DESCRIPTION: 'Bans a member, duh.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what member do you want to ban?`,
+          RETRY: (author: User | null) => `${author}, please mention a member.`,
+        },
+      },
+
+      DURATION: {
+        DESCRIPTION: 'Sets the duration for a mute and reschedules it.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what case do you want to add a duration to?`,
+          RETRY: (author: User | null) =>
+            `${author}, please enter a case number.`,
+        },
+        PROMPT_2: {
+          START: (author: User | null) =>
+            `${author}, for how long do you want the mute to last?`,
+          RETRY: (author: User | null) =>
+            `${author}, please use a proper time format.`,
+        },
+        NO_CASE_NUMBER: 'at least provide me with a correct number.',
+        NO_CASE:
+          "I looked where I could, but I couldn't find a case with that Id, maybe look for something that actually exists next time!",
+        WRONG_MOD:
+          "you'd be wrong in thinking I would let you fiddle with other peoples achievements!",
+        NO_MESSAGE: "looks like the message doesn't exist anymore!",
+        REPLY: (id: number) =>
+          `Successfully updated duration for case **#${id}**`,
+      },
+
+      HISTORY: {
+        DESCRIPTION: 'Check the history of a member.',
+        NO_PERMISSION: 'you know, I know, we should just leave it at that.',
+      },
+
+      KICK: {
+        DESCRIPTION: 'Kicks a member, duh.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what member do you want to kick?`,
+          RETRY: (author: User | null) => `${author}, please mention a member.`,
+        },
+      },
+
+      MUTE: {
+        DESCRIPTION: 'Mutes a member, duh.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what member do you want to mute?`,
+          RETRY: (author: User | null) => `${author}, please mention a member.`,
+        },
+        PROMPT_2: {
+          START: (author: User | null) =>
+            `${author}, for how long do you want the mute to last?`,
+          RETRY: (author: User | null) =>
+            `${author}, please use a proper time format.`,
+        },
+      },
+
+      REASON: {
+        DESCRIPTION: 'Sets/Updates the reason of a modlog entry.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what case do you want to add a reason to?`,
+          RETRY: (author: User | null) =>
+            `${author}, please enter a case number.`,
+        },
+        NO_CASE_NUMBER: 'at least provide me with a correct number.',
+        NO_CASE:
+          "I looked where I could, but I couldn't find a case with that Id, maybe look for something that actually exists next time!",
+        WRONG_MOD:
+          "you'd be wrong in thinking I would let you fiddle with other peoples achievements!",
+        NO_MESSAGE: "looks like the message doesn't exist anymore!",
+        REPLY: (ids: number[]) =>
+          `Successfully set reason for ${
+            ids.length === 1
+              ? `case **#${ids[0]}**`
+              : `cases **#${ids[0]}-#${ids[ids.length - 1]}**`
+          }`,
+      },
+
+      SOFTBAN: {
+        DESCRIPTION: 'Softbans a member, duh.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what member do you want to softban?`,
+          RETRY: (author: User | null) => `${author}, please mention a member.`,
+        },
+      },
+
+      UNBAN: {
+        DESCRIPTION: 'Unbans a user, duh.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what member do you want to unban?`,
+          RETRY: (author: User | null) => `${author}, please mention a member.`,
+        },
+      },
+
+      WARN: {
+        DESCRIPTION: 'Warns a user, duh.',
+        PROMPT: {
+          START: (author: User | null) =>
+            `${author}, what member do you want to warn?`,
+          RETRY: (author: User | null) => `${author}, please mention a member.`,
+        },
+      },
+    },
+  },
+  ACTIONS: {
+    INVALID_MEMBER: 'you have to provide a valid user on this guild.',
+    INVALID_USER: 'you have to provide a valid user not on this guild.',
+    NO_STAFF: "nuh-uh! You know you can't do this.",
+    CURRENTLY_MODERATED:
+      'that user is currently being moderated by someone else.',
+    NO_RESTRICT: 'there are no restricted roles configured on this server.',
+    NO_MUTE: 'there is no mute role configured on this server.',
+
+    BAN: {
+      AWAIT_MESSAGE: 'You sure you want me to ban this [no gender specified]?',
+      TIMEOUT: 'timed out. Cancelled ban.',
+      CANCEL: 'cancelled ban.',
+      MESSAGE: (guild: string, reason?: string) => stripIndents`
+				**You have been banned from ${guild}**
+				${reason ? `\n**Reason:** ${reason}\n` : ''}
+				You can appeal your ban by DMing \`Crawl#0002\` with a message why you think you deserve to have your ban lifted.
+			`,
+      AUDIT: (tag: string, cases: number) =>
+        `Banned by ${tag} | Case #${cases}`,
+      ERROR: (error: string) =>
+        `there was an error banning this member \`${error}\``,
+      PRE_REPLY: (tag: string) => `Banning **${tag}**...`,
+      REPLY: (tag: string) => `Successfully banned **${tag}**`,
     },
   },
 };

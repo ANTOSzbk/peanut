@@ -1,4 +1,13 @@
-import { Guild, Role } from 'discord.js';
+import { Guild, Role, Structures } from 'discord.js';
+import PeanutClient from '../../client/PeanutClient';
+import Queue from './Queue';
+
+export default () =>
+  Structures.extend('Guild', (Guild) => {
+    return class PeanutGuild extends Guild {
+      public caseQueue = new Queue(this.client as PeanutClient);
+    };
+  });
 
 export const getGuildRoles = (
   guild: Guild,

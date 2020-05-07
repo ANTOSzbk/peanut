@@ -3,7 +3,7 @@ import { Message, Permissions, Role } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
 import { MESSAGES } from '../../../utils/messages';
 import CreateRoleCommand from '../createRole';
-import { getGuildRoles } from '../../../helpers/guildData';
+import { getGuildRoles } from '../../../helpers/structures/PeanutGuild';
 
 export default class SetConfigMuteRoleCommand extends Command {
   public constructor() {
@@ -45,7 +45,7 @@ export default class SetConfigMuteRoleCommand extends Command {
         permission: undefined,
       });
       if (newRole instanceof Message || !newRole)
-        return Flag.fail('Incorrect role name.');
+        return Flag.fail('Error occured while trying to create Role.');
       this.client.settings.set(message.guild!, SETTINGS.MUTE_ROLE, newRole.id);
       return message.util?.reply(
         MESSAGES.COMMANDS.CONFIG.SET.MUTE.REPLY(newRole.name)

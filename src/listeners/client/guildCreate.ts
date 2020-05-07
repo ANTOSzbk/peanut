@@ -2,7 +2,7 @@
 import { Listener } from 'discord-akairo';
 import { MESSAGES } from '../../utils/messages';
 import { Guild } from 'discord.js';
-import { EVENTS, TOPICS } from '../../helpers/LoggerProvider';
+import { EVENTS, TOPICS } from '../../helpers/providers/LoggerProvider';
 
 export default class GuildCreateListener extends Listener {
   public constructor() {

@@ -3,7 +3,7 @@ import { Message, Permissions, TextChannel } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
 import { MESSAGES } from '../../../utils/messages';
 import CreateChannelCommand from '../createChannel';
-import { getGuildChannels } from '../../../helpers/guildData';
+import { getGuildChannels } from '../../../helpers/structures/PeanutGuild';
 
 export default class SetConfigModChannelCommand extends Command {
   public constructor() {

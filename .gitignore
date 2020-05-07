@@ -106,5 +106,4 @@ dist
 .*
 
 hasura
-codegen.yml
 graphql.schema.json

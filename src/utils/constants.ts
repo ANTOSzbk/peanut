@@ -1,6 +1,16 @@
 export const PRODUCTION = process.env.NODE_ENV === 'production';
 
+export enum ACTIONS {
+  BAN = 1,
+  UNBAN,
+  SOFTBAN,
+  KICK,
+  MUTE,
+  WARN,
+}
+
 export enum SETTINGS {
+  CASES = 'CASES',
   PREFIX = 'PREFIX',
   MODERATION = 'MODERATION',
   MOD_ROLE = 'MOD_ROLE',
@@ -14,6 +24,7 @@ export enum SETTINGS {
 }
 
 export interface Settings {
+  CASES: number;
   PREFIX: string;
   MODERATION: boolean;
   MOD_ROLE: string;
@@ -35,9 +46,6 @@ export enum COLORS {
   SOFTBAN = 16745216,
   KICK = 16745216,
   MUTE = 16763904,
-  EMBED = 16776960,
-  EMOJI = 16776960,
-  REACTION = 16776960,
   TAG = 16776960,
   WARN = 16776960,
 

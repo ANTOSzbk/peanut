@@ -1,7 +1,7 @@
 import { Listener } from 'discord-akairo';
 import { MESSAGES } from '../../utils/messages';
 import { SETTINGS } from '../../utils/constants';
-import { TOPICS, EVENTS } from '../../helpers/LoggerProvider';
+import { TOPICS, EVENTS } from '../../helpers/providers/LoggerProvider';
 
 export default class ReadyListener extends Listener {
   public constructor() {

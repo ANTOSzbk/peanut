@@ -5,8 +5,14 @@ import {
   ListenerHandler,
 } from 'discord-akairo';
 import { Message, Collection, Webhook } from 'discord.js';
-import HasuraProvider from '../helpers/SettingsProvider';
-import { EVENTS, TOPICS, LoggerProvider } from '../helpers/LoggerProvider';
+import HasuraProvider from '../helpers/providers/SettingsProvider';
+import CaseHandler from '../helpers/structures/CaseHandler';
+import Queue from '../helpers/structures/Queue';
+import {
+  EVENTS,
+  TOPICS,
+  LoggerProvider,
+} from '../helpers/providers/LoggerProvider';
 import { SETTINGS } from '../utils/constants';
 import { Logger } from 'winston';
 import { join } from 'path';
@@ -15,10 +21,17 @@ import { MESSAGES } from '../utils/messages';
 declare module 'discord-akairo' {
   interface AkairoClient {
     commandHandler: CommandHandler;
+    caseHandler: CaseHandler;
     config: PeanutOptions;
     settings: HasuraProvider;
     webhooks: Collection<string, Webhook>;
     logger: Logger;
+  }
+}
+
+declare module 'discord.js' {
+  interface Guild {
+    caseQueue: Queue;
   }
 }
 
@@ -70,6 +83,7 @@ export default class PeanutClient extends AkairoClient {
   });
 
   public config: PeanutOptions;
+  public caseHandler = new CaseHandler(this);
 
   public constructor(config: PeanutOptions) {
     super(

@@ -1,12 +1,12 @@
 import { Provider } from 'discord-akairo';
 import { Guild } from 'discord.js';
-import { PRODUCTION, Settings } from '../utils/constants';
-import { graphQLClient } from '../utils/graphQL/apolloClient';
-import { QUERY, MUTATION } from '../utils/queries/settings';
+import { PRODUCTION, Settings } from '../../utils/constants';
+import { graphQLClient } from '../../utils/graphQL/apolloClient';
+import { QUERY, MUTATION } from '../../utils/queries/settings';
 import {
   Settings as GraphQLSettings,
   SettingsInsertInput,
-} from '../utils/graphQL/graphQLTypes';
+} from '../../utils/graphQL/graphQLTypes';
 
 export default class HasuraProvider extends Provider {
   public ['constructor']: typeof HasuraProvider;

@@ -3,7 +3,7 @@ import { Message, Permissions, Role } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
 import { MESSAGES } from '../../../utils/messages';
 import CreateRoleCommand from '../createRole';
-import { getGuildRoles } from '../../../helpers/guildData';
+import { getGuildRoles } from '../../../helpers/structures/PeanutGuild';
 
 export default class SetConfigModRoleCommand extends Command {
   public constructor() {

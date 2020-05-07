@@ -24,12 +24,33 @@ export default class StartConfigCommand extends Command {
     const settings: Settings = this.client.settings.items.get(
       message.guild!.id!
     );
-    if (settings.ENTRY_ROLE) commands.delete('config-set-entry');
-    if (settings.GUILD_LOG) commands.delete('config-set-guildlog');
-    if (settings.MEMBER_LOG) commands.delete('config-set-memberlog');
-    if (settings.MOD_LOG) commands.delete('config-set-modlog');
-    if (settings.MOD_ROLE) commands.delete('config-set-mod');
-    if (settings.MUTE_ROLE) commands.delete('config-set-mute');
+    let skip: string[] = [];
+    if (settings.ENTRY_ROLE) {
+      skip.push('Entry Role');
+      commands.delete('config-set-entry');
+    }
+    if (settings.GUILD_LOG) {
+      skip.push('Guild Log');
+      commands.delete('config-set-guildlog');
+    }
+    if (settings.MEMBER_LOG) {
+      skip.push('Member Log');
+      commands.delete('config-set-memberlog');
+    }
+    if (settings.MOD_LOG) {
+      skip.push('Mod Log');
+      commands.delete('config-set-modlog');
+    }
+    if (settings.MOD_ROLE) {
+      skip.push('Mod Role');
+      commands.delete('config-set-mod');
+    }
+    if (settings.MUTE_ROLE) {
+      skip.push('Mute Role');
+      commands.delete('config-set-mute');
+    }
+    if (skip.length)
+      message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.SKIP(skip));
     if (!commands.size)
       return message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.EMPTY(prefix));
     for await (let command of commands.values()) {
