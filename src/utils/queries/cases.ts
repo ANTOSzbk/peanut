@@ -3,10 +3,10 @@ import gql from 'graphql-tag';
 
 export const QUERY = {
   CASES: gql`
-  query($guild: String!, $caseId: [Int!]!) {
+  query($guild: String!, $case_id: [Int!]!) {
     cases${PRODUCTION ? '' : 'Dev'}(where: {
       guild: { _eq: $guild },
-      case_id: { _in: $caseId }
+      case_id: { _in: $case_id }
     }) {
       action
       action_duration
@@ -39,9 +39,9 @@ export const QUERY = {
 `,
 
   HISTORY_CASE: gql`
-  query($targetId: String!) {
+  query($target_id: String!) {
     cases${PRODUCTION ? '' : 'Dev'}(where: {
-      target_id: { _eq: $targetId }
+      target_id: { _eq: $target_id }
     }) {
       action
     }
@@ -49,10 +49,10 @@ export const QUERY = {
 `,
 
   FIX_CASES: gql`
-  query($guild: String!, $caseId: Int!) {
+  query($guild: String!, $case_id: Int!) {
     cases${PRODUCTION ? '' : 'Dev'}(where: {
       guild: { _eq: $guild },
-      case_id: { _gt: $caseId }
+      case_id: { _gt: $case_id }
     }, order_by: { case_id: asc }) {
       id
       message
@@ -61,10 +61,10 @@ export const QUERY = {
 `,
 
   MUTES: gql`
-  query($actionDuration: timestamptz!, $actionProcessed: Boolean!) {
+  query($action_duration: timestamptz!, $action_processed: Boolean!) {
     cases${PRODUCTION ? '' : 'Staging'}(where: {
-      action_duration: { _gt: $actionDuration },
-      action_processed: { _eq: $actionProcessed }
+      action_duration: { _gt: $action_duration },
+      action_processed: { _eq: $action_processed }
     }) {
       action_duration
       guild
@@ -76,12 +76,12 @@ export const QUERY = {
 `,
 
   MUTE_DURATION: gql`
-  query($guild: String!, $caseId: Int!, $action: Int!, $actionProcessed: Boolean!) {
+  query($guild: String!, $case_id: Int!, $action: Int!, $action_processed: Boolean!) {
     cases${PRODUCTION ? '' : 'Dev'}(where: {
       guild: { _eq: $guild },
-      case_id: { _eq: $caseId },
+      case_id: { _eq: $case_id },
       action: { _eq: $action },
-      action_processed: { _eq: $actionProcessed }
+      action_processed: { _eq: $action_processed }
     }) {
       action
       action_duration
@@ -103,11 +103,11 @@ export const QUERY = {
 `,
 
   MUTE_MEMBER: gql`
-  query($guild: String!, $targetId: String!, $actionProcessed: Boolean!) {
+  query($guild: String!, $target_id: String!, $action_processed: Boolean!) {
     cases${PRODUCTION ? '' : 'Dev'}(where: {
       guild: { _eq: $guild },
-      target_id: { _eq: $targetId },
-      action_processed: { _eq: $actionProcessed },
+      target_id: { _eq: $target_id },
+      action_processed: { _eq: $action_processed },
     }) {
       action
       action_duration
@@ -153,9 +153,9 @@ export const MUTATION = {
           action_processed: $action_processed
           case_id: $case_id
           guild: $guild
-          message: $message
           mod_id: $mod_id
           mod_tag: $mod_tag
+          message: $message
           mute_message: $mute_message
           reason: $reason
           ref_id: $ref_id
@@ -169,16 +169,16 @@ export const MUTATION = {
           action_processed
           case_id
           created_at
-          target_tag
-          target_id
-          ref_id
-          reason
-          id
-          mute_message
-          mod_tag
-          mod_id
-          message
           guild
+          id
+          message
+          mute_message
+          mod_id
+          mod_tag
+          reason
+          ref_id
+          target_id
+          target_tag
         }
       }
     }
@@ -195,10 +195,10 @@ export const MUTATION = {
 `,
 
   FIX_CASE: gql`
-  mutation($id: uuid!, $caseId: Int!) {
-    updateCases${PRODUCTION ? '' : 'Dev'}(where: {
+  mutation($id: uuid!, $case_id: Int!) {
+    update_cases${PRODUCTION ? '' : 'Dev'}(where: {
       id: { _eq: $id }
-    }, _set: { case_id: $caseId }) {
+    }, _set: { case_id: $case_id }) {
       affected_rows
     }
   }
@@ -215,20 +215,20 @@ export const MUTATION = {
 `,
 
   CANCEL_MUTE: gql`
-  mutation($id: uuid!, $actionProcessed: Boolean!) {
+  mutation($id: uuid!, $action_processed: Boolean!) {
     update_cases${PRODUCTION ? '' : 'Dev'}(where: {
       id: { _eq: $id }
-    }, _set: { action_processed: $actionProcessed }) {
+    }, _set: { action_processed: $action_processed }) {
       affected_rows
     }
   }
 `,
 
   UPDATE_DURATION_MUTE: gql`
-  mutation($id: uuid!, $actionDuration: timestamptz!) {
+  mutation($id: uuid!, $action_duration: timestamptz!) {
     update_cases${PRODUCTION ? '' : 'Dev'}(where: {
       id: { _eq: $id }
-    }, _set: { action_duration: $actionDuration }) {
+    }, _set: { action_duration: $action_duration }) {
       returning {
         action
           action_duration
@@ -251,10 +251,10 @@ export const MUTATION = {
 `,
 
   UPDATE_REASON: gql`
-  mutation($id: uuid!, $modId: String!, $modTag: String!, $reason: String!) {
+  mutation($id: uuid!, $mod_id: String!, $mod_tag: String!, $reason: String!) {
     update_cases${PRODUCTION ? '' : 'Dev'}(where: {
       id: { _eq: $id }
-    }, _set: { mod_id: $modId, mod_tag: $modTag, reason: $reason }) {
+    }, _set: { mod_id: $mod_id, mod_tag: $mod_tag, reason: $reason }) {
       affected_rows
     }
   }

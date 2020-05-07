@@ -65,10 +65,11 @@ export default class BanAction extends Action {
     try {
       try {
         await this.member.send(
-          MESSAGES.ACTIONS.BAN.MESSAGE(guild.name, this._reason)
+          MESSAGES.ACTIONS.BAN.MESSAGE(guild, this._reason)
         );
-        // eslint-disable-next-line no-empty
-      } catch {}
+      } catch (error) {
+        throw new Error(MESSAGES.ACTIONS.BAN.DM_BLOCKED(user.tag));
+      }
       await guild.members.ban(user.id, {
         days: this.days,
         reason: MESSAGES.ACTIONS.BAN.AUDIT(this.message.author.tag, totalCases),

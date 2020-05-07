@@ -1,5 +1,8 @@
 import PeanutClient from './client/PeanutClient';
+import { PeanutGuild } from './helpers/structures/PeanutGuild';
 import { TOPICS, EVENTS } from './helpers/providers/LoggerProvider';
+
+PeanutGuild();
 
 const client = new PeanutClient({
   owner: process.env.OWNERS,

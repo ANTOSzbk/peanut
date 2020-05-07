@@ -72,7 +72,7 @@ export default class CaseCommand extends Command {
       query: QUERY.CASES,
       variables: {
         guild: guild.id,
-        caseId: [caseToFind],
+        case_id: [caseToFind],
       },
     });
     let dbCase: Omit<Cases, 'actionProcessed' | 'message'>;

@@ -548,20 +548,24 @@ export const MESSAGES = {
     NO_STAFF: "nuh-uh! You know you can't do this.",
     CURRENTLY_MODERATED:
       'that user is currently being moderated by someone else.',
-    NO_RESTRICT: 'there are no restricted roles configured on this server.',
     NO_MUTE: 'there is no mute role configured on this server.',
 
     BAN: {
-      AWAIT_MESSAGE: 'You sure you want me to ban this [no gender specified]?',
+      AWAIT_MESSAGE:
+        'Are you sure you want me to ban this user from the guild?',
       TIMEOUT: 'timed out. Cancelled ban.',
       CANCEL: 'cancelled ban.',
-      MESSAGE: (guild: string, reason?: string) => stripIndents`
-				**You have been banned from ${guild}**
+      MESSAGE: (guild: Guild, reason?: string) => stripIndents`
+				**You have been banned from ${guild.name}**
 				${reason ? `\n**Reason:** ${reason}\n` : ''}
-				You can appeal your ban by DMing \`Crawl#0002\` with a message why you think you deserve to have your ban lifted.
+				You can appeal your ban by DMing \`${
+          guild.owner?.user.tag
+        }\` or guild moderators with a message why you think you deserve to have your ban lifted.
 			`,
       AUDIT: (tag: string, cases: number) =>
         `Banned by ${tag} | Case #${cases}`,
+      DM_BLOCKED: (tag: string) =>
+        `Error sending message to user ${tag} - he has DM blocked.`,
       ERROR: (error: string) =>
         `there was an error banning this member \`${error}\``,
       PRE_REPLY: (tag: string) => `Banning **${tag}**...`,

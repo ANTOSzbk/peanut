@@ -12,10 +12,10 @@ export default class BanCommand extends Command {
         content: MESSAGES.COMMANDS.MOD.BAN.DESCRIPTION,
         usage: '<member> [--days=number] [--ref=number] [--nsfw] [...reason]',
         examples: [
-          '@Crawl',
-          '@Crawl dumb',
-          '@Souji --days=1 no u',
-          '@Souji --ref=1234 just no',
+          '@UserToBan',
+          '@UserToBan spams in general',
+          '@UserToBan --days=1 think what you do',
+          '@UserToBan --ref=1234 referring to message with ID 1234',
         ],
       },
       channel: 'guild',
@@ -28,8 +28,11 @@ export default class BanCommand extends Command {
         {
           id: 'member',
           type: Argument.union('member', 'user', async (_, phrase) => {
-            const u = await this.client.users.fetch(phrase);
-            return u || null;
+            if (phrase) {
+              const u = await this.client.users.fetch(phrase);
+              return u;
+            }
+            return null;
           }),
           prompt: {
             start: (message: Message) =>

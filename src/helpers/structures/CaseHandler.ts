@@ -9,7 +9,7 @@ import {
   TextChannel,
   User,
 } from 'discord.js';
-import YukikazeClient from '../../client/PeanutClient';
+import PeanutClient from '../../client/PeanutClient';
 import { PRODUCTION, SETTINGS } from '../../utils/constants';
 import { graphQLClient } from '../../utils/graphQL/apolloClient';
 import { QUERY, MUTATION } from '../../utils/queries/cases';
@@ -24,19 +24,7 @@ interface Footer {
   [key: string]: number | undefined;
 }
 
-export const ACTION_KEYS = [
-  '',
-  'ban',
-  'unban',
-  'kick',
-  'kick',
-  'mute',
-  'restriction',
-  'restriction',
-  'restriction',
-  'warn',
-  'restriction',
-];
+export const ACTION_KEYS = ['', 'ban', 'unban', 'kick', 'kick', 'mute', 'warn'];
 
 interface Log {
   member: GuildMember | User;
@@ -59,7 +47,7 @@ interface Log {
 export default class CaseHandler {
   public cachedCases = new Set<string>();
 
-  public constructor(private readonly client: YukikazeClient) {}
+  public constructor(private readonly client: PeanutClient) {}
 
   public async create({
     action,
@@ -91,8 +79,8 @@ export default class CaseHandler {
           target_tag,
         },
       });
-      if (PRODUCTION) return data.insertCases.returning[0] as Cases;
-      return data.insertCasesStaging.returning[0] as Cases;
+      if (PRODUCTION) return data.insert_cases.returning[0] as Cases;
+      return data.insert_casesDev.returning[0] as Cases;
     } catch (error) {
       this.client.logger.error(error);
     }
@@ -104,12 +92,12 @@ export default class CaseHandler {
       query: QUERY.CASES,
       variables: {
         guild: guild.id,
-        caseId: [caseNum],
+        case_id: [caseNum],
       },
     });
     let cs: Cases;
     if (PRODUCTION) cs = data.cases[0];
-    else cs = data.casesStaging[0];
+    else cs = data.casesDev[0];
     const channel = this.client.settings.get(guild, SETTINGS.MOD_LOG);
     const muteRole = this.client.settings.get(guild, SETTINGS.MUTE_ROLE)!;
 
@@ -160,11 +148,11 @@ export default class CaseHandler {
           query: QUERY.CASES,
           variables: {
             guild: guild.id,
-            caseId: [ref],
+            case_id: [ref],
           },
         });
         if (PRODUCTION) reference = data.cases[0];
-        else reference = data.casesStaging[0];
+        else reference = data.casesDev[0];
         channel = this.client.settings.get(guild, SETTINGS.MOD_LOG);
       } catch {}
     }
@@ -196,6 +184,7 @@ export default class CaseHandler {
   }
 
   public async history(member: GuildMember | User) {
+    console.log(`x\n\n\n\n\nx`);
     const { data } = await graphQLClient.query<any, CasesInsertInput>({
       query: QUERY.HISTORY_CASE,
       variables: {
@@ -204,7 +193,7 @@ export default class CaseHandler {
     });
     let cases: Pick<Cases, 'action'>[];
     if (PRODUCTION) cases = data.cases;
-    else cases = data.casesStaging;
+    else cases = data.casesDev;
     const footer = cases.reduce((count: Footer, c) => {
       const action = ACTION_KEYS[c.action];
       count[action] = (count[action] || 0) + 1;
@@ -222,12 +211,11 @@ export default class CaseHandler {
     ];
     const values = [
       footer.warn || 0,
-      footer.restriction || 0,
       footer.mute || 0,
       footer.kick || 0,
       footer.ban || 0,
     ];
-    const [warn, restriction, mute, kick, ban] = values;
+    const [warn, mute, kick, ban] = values;
     const colorIndex = Math.min(
       values.reduce((a, b) => a + b),
       colors.length - 1
@@ -245,7 +233,6 @@ export default class CaseHandler {
       .setColor(colors[colorIndex]).setFooter(oneLine`${warn} warning${
       warn > 1 || warn === 0 ? 's' : ''
     },
-				${restriction} restriction${restriction > 1 || restriction === 0 ? 's' : ''},
 				${mute} mute${mute > 1 || mute === 0 ? 's' : ''},
 				${kick} kick${kick > 1 || kick === 0 ? 's' : ''},
 				and ${ban} ban${ban > 1 || ban === 0 ? 's' : ''}.
@@ -328,7 +315,7 @@ export default class CaseHandler {
     });
     let cases: Pick<Cases, 'id' | 'message'>[];
     if (PRODUCTION) cases = data.cases;
-    else cases = data.casesStaging;
+    else cases = data.casesDev;
     let newCaseNum = caseNum;
 
     for (const c of cases) {

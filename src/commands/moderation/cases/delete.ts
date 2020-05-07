@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import ms from '@naval-base/ms';
 import { stripIndents } from 'common-tags';
 import { Argument, Command } from 'discord-akairo';
@@ -77,7 +78,7 @@ export default class CaseDeleteCommand extends Command {
       query: QUERY.CASES,
       variables: {
         guild: guild.id,
-        caseId: [caseToFind],
+        case_id: [caseToFind],
       },
     });
     let dbCase: Omit<Cases, 'actionProcessed' | 'message'>;

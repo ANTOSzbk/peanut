@@ -1,6 +1,6 @@
 import { PrefixSupplier } from 'discord-akairo';
 import { GuildMember, Message, TextChannel, User } from 'discord.js';
-import YukikazeClient from '../../../client/PeanutClient';
+import PeanutClient from '../../../client/PeanutClient';
 import {
   ACTIONS,
   COLORS,
@@ -23,7 +23,7 @@ export interface ActionData {
 }
 
 export default abstract class Action {
-  protected client: YukikazeClient;
+  protected client: PeanutClient;
 
   protected message: Message;
 
@@ -42,7 +42,7 @@ export default abstract class Action {
   protected nsfw?: boolean;
 
   public constructor(protected action: ACTIONS, data: ActionData) {
-    this.client = data.message.client as YukikazeClient;
+    this.client = data.message.client as PeanutClient;
     this.message = data.message;
     this.member = data.member;
     this.keys = data.keys;
@@ -106,6 +106,7 @@ export default abstract class Action {
       await this.exec();
       await this.after();
     } catch (error) {
+      console.log(error);
       this.message.channel.send(error.message);
     }
   }
@@ -142,7 +143,7 @@ export default abstract class Action {
       });
       let dbCase: Pick<Cases, 'id' | 'message'>;
       if (PRODUCTION) dbCase = data.cases[0];
-      else dbCase = data.casesStaging[0];
+      else dbCase = data.casesDev[0];
       if (dbCase) {
         const embed = (
           await this.client.caseHandler.log({
