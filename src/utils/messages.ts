@@ -571,6 +571,7 @@ export const MESSAGES = {
       PRE_REPLY: (tag: string) => `Banning **${tag}**...`,
       REPLY: (tag: string) => `Successfully banned **${tag}**`,
     },
+
     KICK: {
       MESSAGE: (guild: string, reason?: string) => stripIndents`
 				**You have been kicked from ${guild}**
@@ -586,6 +587,24 @@ export const MESSAGES = {
       PRE_REPLY: (tag: string) => `Kicking **${tag}**...`,
       REPLY: (tag: string) => `Successfully kicked **${tag}**`,
     },
+
+    SOFTBAN: {
+      MESSAGE: (guild: string, reason?: string) => stripIndents`
+				**You have been softbanned from ${guild}**
+				${reason ? `\n**Reason:** ${reason}\n` : ''}
+				A softban is a kick that uses ban + unban to remove your messages from the server.
+				You may rejoin whenever.
+      `,
+      DM_BLOCKED: (tag: string) =>
+        `Error sending ban info message to user ${tag} - he has DM blocked.`,
+      AUDIT: (tag: string, cases: number) =>
+        `Softbanned by ${tag} | Case #${cases}`,
+      ERROR: (error: string) =>
+        `there was an error softbanning this member \`${error}\``,
+      PRE_REPLY: (tag: string) => `Softbanning **${tag}**...`,
+      REPLY: (tag: string) => `Successfully softbanned **${tag}**`,
+    },
+
     UNBAN: {
       AUDIT: (tag: string, cases: number) =>
         `Unbanned by ${tag} | Case #${cases}`,
@@ -594,6 +613,7 @@ export const MESSAGES = {
       PRE_REPLY: (tag: string) => `Unbanning **${tag}**...`,
       REPLY: (tag: string) => `Successfully unbanned **${tag}**`,
     },
+
     WARN: {
       PRE_REPLY: (tag: string) => `Warning **${tag}**...`,
       REPLY: (tag: string) => `Successfully warned **${tag}**`,
