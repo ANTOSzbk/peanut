@@ -77,6 +77,7 @@ export type Cases = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id: Scalars['String'];
@@ -95,6 +96,7 @@ export type CasesDev = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id: Scalars['String'];
@@ -179,6 +181,7 @@ export type CasesDevBoolExp = {
   message?: Maybe<StringComparisonExp>;
   mod_id?: Maybe<StringComparisonExp>;
   mod_tag?: Maybe<StringComparisonExp>;
+  mute_message?: Maybe<StringComparisonExp>;
   reason?: Maybe<StringComparisonExp>;
   ref_id?: Maybe<IntComparisonExp>;
   target_id?: Maybe<StringComparisonExp>;
@@ -210,6 +213,7 @@ export type CasesDevInsertInput = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -227,6 +231,7 @@ export type CasesDevMaxFields = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -244,6 +249,7 @@ export type CasesDevMaxOrderBy = {
   message?: Maybe<OrderBy>;
   mod_id?: Maybe<OrderBy>;
   mod_tag?: Maybe<OrderBy>;
+  mute_message?: Maybe<OrderBy>;
   reason?: Maybe<OrderBy>;
   ref_id?: Maybe<OrderBy>;
   target_id?: Maybe<OrderBy>;
@@ -261,6 +267,7 @@ export type CasesDevMinFields = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -278,6 +285,7 @@ export type CasesDevMinOrderBy = {
   message?: Maybe<OrderBy>;
   mod_id?: Maybe<OrderBy>;
   mod_tag?: Maybe<OrderBy>;
+  mute_message?: Maybe<OrderBy>;
   reason?: Maybe<OrderBy>;
   ref_id?: Maybe<OrderBy>;
   target_id?: Maybe<OrderBy>;
@@ -317,6 +325,7 @@ export type CasesDevOrderBy = {
   message?: Maybe<OrderBy>;
   mod_id?: Maybe<OrderBy>;
   mod_tag?: Maybe<OrderBy>;
+  mute_message?: Maybe<OrderBy>;
   reason?: Maybe<OrderBy>;
   ref_id?: Maybe<OrderBy>;
   target_id?: Maybe<OrderBy>;
@@ -351,6 +360,8 @@ export enum CasesDevSelectColumn {
   /** column name */
   ModTag = 'mod_tag',
   /** column name */
+  MuteMessage = 'mute_message',
+  /** column name */
   Reason = 'reason',
   /** column name */
   RefId = 'ref_id',
@@ -372,6 +383,7 @@ export type CasesDevSetInput = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -456,6 +468,8 @@ export enum CasesDevUpdateColumn {
   ModId = 'mod_id',
   /** column name */
   ModTag = 'mod_tag',
+  /** column name */
+  MuteMessage = 'mute_message',
   /** column name */
   Reason = 'reason',
   /** column name */
@@ -586,6 +600,7 @@ export type CasesBoolExp = {
   message?: Maybe<StringComparisonExp>;
   mod_id?: Maybe<StringComparisonExp>;
   mod_tag?: Maybe<StringComparisonExp>;
+  mute_message?: Maybe<StringComparisonExp>;
   reason?: Maybe<StringComparisonExp>;
   ref_id?: Maybe<IntComparisonExp>;
   target_id?: Maybe<StringComparisonExp>;
@@ -617,6 +632,7 @@ export type CasesInsertInput = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -634,6 +650,7 @@ export type CasesMaxFields = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -651,6 +668,7 @@ export type CasesMaxOrderBy = {
   message?: Maybe<OrderBy>;
   mod_id?: Maybe<OrderBy>;
   mod_tag?: Maybe<OrderBy>;
+  mute_message?: Maybe<OrderBy>;
   reason?: Maybe<OrderBy>;
   ref_id?: Maybe<OrderBy>;
   target_id?: Maybe<OrderBy>;
@@ -668,6 +686,7 @@ export type CasesMinFields = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -685,6 +704,7 @@ export type CasesMinOrderBy = {
   message?: Maybe<OrderBy>;
   mod_id?: Maybe<OrderBy>;
   mod_tag?: Maybe<OrderBy>;
+  mute_message?: Maybe<OrderBy>;
   reason?: Maybe<OrderBy>;
   ref_id?: Maybe<OrderBy>;
   target_id?: Maybe<OrderBy>;
@@ -724,6 +744,7 @@ export type CasesOrderBy = {
   message?: Maybe<OrderBy>;
   mod_id?: Maybe<OrderBy>;
   mod_tag?: Maybe<OrderBy>;
+  mute_message?: Maybe<OrderBy>;
   reason?: Maybe<OrderBy>;
   ref_id?: Maybe<OrderBy>;
   target_id?: Maybe<OrderBy>;
@@ -758,6 +779,8 @@ export enum CasesSelectColumn {
   /** column name */
   ModTag = 'mod_tag',
   /** column name */
+  MuteMessage = 'mute_message',
+  /** column name */
   Reason = 'reason',
   /** column name */
   RefId = 'ref_id',
@@ -779,6 +802,7 @@ export type CasesSetInput = {
   message?: Maybe<Scalars['String']>;
   mod_id?: Maybe<Scalars['String']>;
   mod_tag?: Maybe<Scalars['String']>;
+  mute_message?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   ref_id?: Maybe<Scalars['Int']>;
   target_id?: Maybe<Scalars['String']>;
@@ -863,6 +887,8 @@ export enum CasesUpdateColumn {
   ModId = 'mod_id',
   /** column name */
   ModTag = 'mod_tag',
+  /** column name */
+  MuteMessage = 'mute_message',
   /** column name */
   Reason = 'reason',
   /** column name */

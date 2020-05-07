@@ -588,6 +588,14 @@ export const MESSAGES = {
       REPLY: (tag: string) => `Successfully kicked **${tag}**`,
     },
 
+    MUTE: {
+      AUDIT: (tag: string, cases: number) => `Muted by ${tag} | Case #${cases}`,
+      ERROR: (error: string) =>
+        `there was an error muting this member \`${error}\``,
+      PRE_REPLY: (tag: string) => `Muting **${tag}**...`,
+      REPLY: (tag: string) => `Successfully muted **${tag}**`,
+    },
+
     SOFTBAN: {
       MESSAGE: (guild: string, reason?: string) => stripIndents`
 				**You have been softbanned from ${guild}**

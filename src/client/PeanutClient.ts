@@ -17,11 +17,13 @@ import { SETTINGS } from '../utils/constants';
 import { Logger } from 'winston';
 import { join } from 'path';
 import { MESSAGES } from '../utils/messages';
+import MuteScheduler from '../helpers/structures/MuteScheduler';
 
 declare module 'discord-akairo' {
   interface AkairoClient {
     commandHandler: CommandHandler;
     caseHandler: CaseHandler;
+    muteScheduler: MuteScheduler;
     config: PeanutOptions;
     settings: HasuraProvider;
     webhooks: Collection<string, Webhook>;
@@ -84,6 +86,7 @@ export default class PeanutClient extends AkairoClient {
 
   public config: PeanutOptions;
   public caseHandler = new CaseHandler(this);
+  public muteScheduler = new MuteScheduler(this);
 
   public constructor(config: PeanutOptions) {
     super(
