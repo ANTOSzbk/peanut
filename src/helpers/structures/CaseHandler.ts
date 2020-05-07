@@ -184,7 +184,6 @@ export default class CaseHandler {
   }
 
   public async history(member: GuildMember | User) {
-    console.log(`x\n\n\n\n\nx`);
     const { data } = await graphQLClient.query<any, CasesInsertInput>({
       query: QUERY.HISTORY_CASE,
       variables: {
@@ -259,7 +258,7 @@ export default class CaseHandler {
     }
     if (['Mute', 'Warn'].includes(action)) {
       if (message instanceof Message) {
-        msg += `\n**Context:** [Beam me up, Yuki](${message.url})`;
+        msg += `\n**Context:** [Go to message](${message.url})`;
       }
     }
     msg += `\n**Reason:** ${reason}`;

@@ -27,10 +27,10 @@ export const QUERY = {
 `,
 
   LOG_CASE: gql`
-  query($guild: String!, $caseId: Int!) {
+  query($guild: String!, $case_id: Int!) {
     cases${PRODUCTION ? '' : 'Dev'}(where: {
       guild: { _eq: $guild },
-      case_id: { _eq: $caseId }
+      case_id: { _eq: $case_id }
     }, order_by: { case_id: asc }) {
       id
       message

@@ -33,6 +33,7 @@ export default class SetConfigCommand extends Command {
         ],
         ['config-set-mute', 'muteRole', 'mute', 'mute-role'],
         ['config-set-entry', 'entryRole', 'entry', 'entry-role'],
+        ['config-set-cases', 'cases', 'case'],
       ],
       otherwise: (msg: Message) => {
         const prefix = (this.handler.prefix as PrefixSupplier)(msg);

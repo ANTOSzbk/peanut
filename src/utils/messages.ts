@@ -431,7 +431,7 @@ export const MESSAGES = {
         },
       },
       BAN: {
-        DESCRIPTION: 'Bans a member, duh.',
+        DESCRIPTION: 'Bans a member.',
         PROMPT: {
           START: (author: User | null) =>
             `${author}, what member do you want to ban?`,
@@ -469,7 +469,7 @@ export const MESSAGES = {
       },
 
       KICK: {
-        DESCRIPTION: 'Kicks a member, duh.',
+        DESCRIPTION: 'Kicks a member.',
         PROMPT: {
           START: (author: User | null) =>
             `${author}, what member do you want to kick?`,
@@ -478,7 +478,7 @@ export const MESSAGES = {
       },
 
       MUTE: {
-        DESCRIPTION: 'Mutes a member, duh.',
+        DESCRIPTION: 'Mutes a member.',
         PROMPT: {
           START: (author: User | null) =>
             `${author}, what member do you want to mute?`,
@@ -515,7 +515,7 @@ export const MESSAGES = {
       },
 
       SOFTBAN: {
-        DESCRIPTION: 'Softbans a member, duh.',
+        DESCRIPTION: 'Softbans a member.',
         PROMPT: {
           START: (author: User | null) =>
             `${author}, what member do you want to softban?`,
@@ -524,7 +524,7 @@ export const MESSAGES = {
       },
 
       UNBAN: {
-        DESCRIPTION: 'Unbans a user, duh.',
+        DESCRIPTION: 'Unbans a user.',
         PROMPT: {
           START: (author: User | null) =>
             `${author}, what member do you want to unban?`,
@@ -533,7 +533,7 @@ export const MESSAGES = {
       },
 
       WARN: {
-        DESCRIPTION: 'Warns a user, duh.',
+        DESCRIPTION: 'Warns a user.',
         PROMPT: {
           START: (author: User | null) =>
             `${author}, what member do you want to warn?`,
@@ -565,11 +565,30 @@ export const MESSAGES = {
       AUDIT: (tag: string, cases: number) =>
         `Banned by ${tag} | Case #${cases}`,
       DM_BLOCKED: (tag: string) =>
-        `Error sending message to user ${tag} - he has DM blocked.`,
+        `Error sending ban info message to user ${tag} - he has DM blocked.`,
       ERROR: (error: string) =>
         `there was an error banning this member \`${error}\``,
       PRE_REPLY: (tag: string) => `Banning **${tag}**...`,
       REPLY: (tag: string) => `Successfully banned **${tag}**`,
+    },
+    KICK: {
+      MESSAGE: (guild: string, reason?: string) => stripIndents`
+				**You have been kicked from ${guild}**
+				${reason ? `\n**Reason:** ${reason}\n` : ''}
+				You may rejoin whenever.
+			`,
+      AUDIT: (tag: string, cases: number) =>
+        `Kicked by ${tag} | Case #${cases}`,
+      DM_BLOCKED: (tag: string) =>
+        `Error sending kick info message to user ${tag} - he has DM blocked.`,
+      ERROR: (error: string) =>
+        `there was an error kicking this member \`${error}\``,
+      PRE_REPLY: (tag: string) => `Kicking **${tag}**...`,
+      REPLY: (tag: string) => `Successfully kicked **${tag}**`,
+    },
+    WARN: {
+      PRE_REPLY: (tag: string) => `Warning **${tag}**...`,
+      REPLY: (tag: string) => `Successfully warned **${tag}**`,
     },
   },
 };
