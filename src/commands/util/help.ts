@@ -1,6 +1,6 @@
 import { Command, PrefixSupplier } from 'discord-akairo';
 import { Message, MessageEmbed, Permissions } from 'discord.js';
-import { MESSAGES } from '../utils/messages';
+import { MESSAGES } from '../../utils/messages';
 
 export default class HelpCommand extends Command {
   public constructor() {

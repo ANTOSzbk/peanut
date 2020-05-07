@@ -586,6 +586,14 @@ export const MESSAGES = {
       PRE_REPLY: (tag: string) => `Kicking **${tag}**...`,
       REPLY: (tag: string) => `Successfully kicked **${tag}**`,
     },
+    UNBAN: {
+      AUDIT: (tag: string, cases: number) =>
+        `Unbanned by ${tag} | Case #${cases}`,
+      ERROR: (error: string) =>
+        `there was an error unbanning this member \`${error}\``,
+      PRE_REPLY: (tag: string) => `Unbanning **${tag}**...`,
+      REPLY: (tag: string) => `Successfully unbanned **${tag}**`,
+    },
     WARN: {
       PRE_REPLY: (tag: string) => `Warning **${tag}**...`,
       REPLY: (tag: string) => `Successfully warned **${tag}**`,
