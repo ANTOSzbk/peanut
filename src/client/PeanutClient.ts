@@ -4,12 +4,36 @@ import {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
+import { Message, Collection, Webhook } from 'discord.js';
+import HasuraProvider from '../helpers/providers/SettingsProvider';
+import CaseHandler from '../helpers/structures/CaseHandler';
+import Queue from '../helpers/structures/Queue';
+import {
+  EVENTS,
+  TOPICS,
+  LoggerProvider,
+} from '../helpers/providers/LoggerProvider';
+import { SETTINGS } from '../utils/constants';
+import { Logger } from 'winston';
 import { join } from 'path';
+import { MESSAGES } from '../utils/messages';
+import MuteScheduler from '../helpers/structures/MuteScheduler';
 
 declare module 'discord-akairo' {
   interface AkairoClient {
     commandHandler: CommandHandler;
+    caseHandler: CaseHandler;
+    muteScheduler: MuteScheduler;
     config: PeanutOptions;
+    settings: HasuraProvider;
+    webhooks: Collection<string, Webhook>;
+    logger: Logger;
+  }
+}
+
+declare module 'discord.js' {
+  interface Guild {
+    caseQueue: Queue;
   }
 }
 
@@ -19,17 +43,37 @@ interface PeanutOptions {
 }
 
 export default class PeanutClient extends AkairoClient {
+  public settings = new HasuraProvider();
+  public logger = LoggerProvider;
+
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: join(__dirname, '..', 'commands'),
-    // TODO: guild prefix integration
-    prefix: '?',
-    //
+    prefix: (message: Message): string =>
+      this.settings.get(
+        message.guild!,
+        SETTINGS.PREFIX,
+        process.env.COMMAND_PREFIX
+      ),
     aliasReplacement: /-/g,
     allowMention: true,
     handleEdits: true,
     commandUtil: true,
     commandUtilLifetime: 3e5,
     defaultCooldown: 3000,
+    argumentDefaults: {
+      prompt: {
+        modifyStart: (_, str) =>
+          MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_START(str),
+        modifyRetry: (_, str) =>
+          MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_RETRY(str),
+        timeout: MESSAGES.COMMAND_HANDLER.PROMPT.TIMEOUT,
+        ended: MESSAGES.COMMAND_HANDLER.PROMPT.ENDED,
+        cancel: MESSAGES.COMMAND_HANDLER.PROMPT.CANCEL,
+        retries: 3,
+        time: 40000,
+      },
+      otherwise: '',
+    },
   });
 
   public inhibitorHandler = new InhibitorHandler(this, {
@@ -41,6 +85,8 @@ export default class PeanutClient extends AkairoClient {
   });
 
   public config: PeanutOptions;
+  public caseHandler = new CaseHandler(this);
+  public muteScheduler = new MuteScheduler(this);
 
   public constructor(config: PeanutOptions) {
     super(
@@ -52,22 +98,37 @@ export default class PeanutClient extends AkairoClient {
     );
 
     this.config = config;
+
+    process.on('unhandledRejection', (err: any) =>
+      this.logger.error(err, { topic: TOPICS.UNHANDLED_REJECTION })
+    );
+
+    if (process.env.LOGS) {
+      this.webhooks = new Collection();
+    }
   }
 
   private async _init() {
-    // async proto because of possible API feature
-
-    this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
-    this.commandHandler.useListenerHandler(this.listenerHandler);
-    this.listenerHandler.setEmitters({
-      commandHandler: this.commandHandler,
-      inhibitorHandler: this.inhibitorHandler,
-      listenerHandler: this.listenerHandler,
-    });
-
     this.commandHandler.loadAll();
+    this.logger.info(MESSAGES.COMMAND_HANDLER.LOADED, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
     this.inhibitorHandler.loadAll();
+    this.logger.info(MESSAGES.INHIBITOR_HANDLER.LOADED, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
     this.listenerHandler.loadAll();
+    this.logger.info(MESSAGES.LISTENER_HANDLER.LOADED, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
+    await this.settings.init();
+    this.logger.info(MESSAGES.SETTINGS.INIT, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
   }
 
   public async start() {

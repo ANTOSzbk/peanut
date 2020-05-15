@@ -2,6 +2,7 @@
 import { Listener } from 'discord-akairo';
 import { MESSAGES } from '../../utils/messages';
 import { Guild } from 'discord.js';
+import { EVENTS, TOPICS } from '../../helpers/providers/LoggerProvider';
 
 export default class GuildCreateListener extends Listener {
   public constructor() {
@@ -13,12 +14,16 @@ export default class GuildCreateListener extends Listener {
   }
 
   public async exec(guild: Guild) {
-    console.log(
+    this.client.logger.info(
       MESSAGES.EVENTS.GUILD_CREATE.LOG(
-        this.client.user?.tag ?? 'Peanut',
+        this.client.user?.tag ?? '',
         guild.name,
         guild.id
-      )
+      ),
+      {
+        topic: TOPICS.DISCORD,
+        event: EVENTS.GUILD_CREATE,
+      }
     );
   }
 }

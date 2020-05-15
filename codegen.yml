@@ -1,0 +1,14 @@
+overwrite: true
+schema:
+  - ${GRAPHQL_ENDPOINT}:
+      headers:
+        X-Hasura-Admin-Secret: ${HASURA_GRAPHQL_ADMIN_SECRET}
+config:
+  namingConvention:
+    typeNames: pascal-case#pascalCase
+    transformUnderscore: true
+  skipTypename: true
+generates:
+  src/utils/graphQL/graphQLTypes.ts:
+    plugins:
+      - 'typescript'
