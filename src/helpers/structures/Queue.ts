@@ -4,7 +4,6 @@ export default class Queue {
   private readonly _queue: ((...args: any) => Promise<any>)[] = [];
   private _processing = false;
 
-  // eslint-disable-next-line no-useless-constructor
   public constructor(public readonly client: PeanutClient) {}
 
   public get length() {

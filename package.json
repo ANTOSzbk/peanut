@@ -39,6 +39,7 @@
     "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
+    "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.4.2"
@@ -50,6 +51,7 @@
     "@graphql-codegen/typescript-resolvers": "^1.13.5",
     "@types/common-tags": "^1.8.0",
     "@types/node": "^13.13.4",
+    "@types/node-emoji": "^1.8.1",
     "@types/node-fetch": "^2.5.7",
     "@types/ws": "^7.2.4",
     "@typescript-eslint/eslint-plugin": "^2.30.0",

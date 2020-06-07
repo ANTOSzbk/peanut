@@ -9,6 +9,11 @@ export enum ACTIONS {
   WARN,
 }
 
+export interface ReactionMessages {
+  EMOTE: String;
+  ROLE: String;
+}
+
 export enum SETTINGS {
   CASES = 'CASES',
   PREFIX = 'PREFIX',
