@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import PeanutClient from './client/PeanutClient';
 import { PeanutGuild } from './helpers/structures/PeanutGuild';
 import { TOPICS, EVENTS } from './helpers/providers/LoggerProvider';
@@ -22,8 +23,6 @@ client
       event: `SHARD ${id} ERROR`,
     })
   )
-  .on('warn', (info) =>
-    client.logger.warn(info, { topic: TOPICS.DISCORD, event: EVENTS.WARN })
-  );
+  .on('warn', (info) => client.logger.warn(info, { topic: TOPICS.DISCORD, event: EVENTS.WARN }));
 
 client.start();

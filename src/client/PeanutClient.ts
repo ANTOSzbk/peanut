@@ -1,18 +1,10 @@
-import {
-  AkairoClient,
-  CommandHandler,
-  InhibitorHandler,
-  ListenerHandler,
-} from 'discord-akairo';
+import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 'discord-akairo';
 import { Message, Collection, Webhook } from 'discord.js';
 import HasuraProvider from '../helpers/providers/SettingsProvider';
+import ReactionMessagesProvider from '../helpers/providers/ReactionMessagesProvider';
 import CaseHandler from '../helpers/structures/CaseHandler';
 import Queue from '../helpers/structures/Queue';
-import {
-  EVENTS,
-  TOPICS,
-  LoggerProvider,
-} from '../helpers/providers/LoggerProvider';
+import { EVENTS, TOPICS, LoggerProvider } from '../helpers/providers/LoggerProvider';
 import { SETTINGS } from '../utils/constants';
 import { Logger } from 'winston';
 import { join } from 'path';
@@ -26,6 +18,7 @@ declare module 'discord-akairo' {
     muteScheduler: MuteScheduler;
     config: PeanutOptions;
     settings: HasuraProvider;
+    reactionMessages: ReactionMessagesProvider;
     webhooks: Collection<string, Webhook>;
     logger: Logger;
   }
@@ -45,15 +38,12 @@ interface PeanutOptions {
 export default class PeanutClient extends AkairoClient {
   public settings = new HasuraProvider();
   public logger = LoggerProvider;
+  public reactionMessages = new ReactionMessagesProvider(this);
 
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: join(__dirname, '..', 'commands'),
     prefix: (message: Message): string =>
-      this.settings.get(
-        message.guild!,
-        SETTINGS.PREFIX,
-        process.env.COMMAND_PREFIX
-      ),
+      this.settings.get(message.guild!, SETTINGS.PREFIX, process.env.COMMAND_PREFIX),
     aliasReplacement: /-/g,
     allowMention: true,
     handleEdits: true,
@@ -62,10 +52,8 @@ export default class PeanutClient extends AkairoClient {
     defaultCooldown: 3000,
     argumentDefaults: {
       prompt: {
-        modifyStart: (_, str) =>
-          MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_START(str),
-        modifyRetry: (_, str) =>
-          MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_RETRY(str),
+        modifyStart: (_, str) => MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_START(str),
+        modifyRetry: (_, str) => MESSAGES.COMMAND_HANDLER.PROMPT.MODIFY_RETRY(str),
         timeout: MESSAGES.COMMAND_HANDLER.PROMPT.TIMEOUT,
         ended: MESSAGES.COMMAND_HANDLER.PROMPT.ENDED,
         cancel: MESSAGES.COMMAND_HANDLER.PROMPT.CANCEL,

@@ -14,21 +14,21 @@ export default class ReadyListener extends Listener {
 
   public async exec() {
     this.client.logger.info(
-      MESSAGES.EVENTS.READY.LOG(
-        this.client.user?.tag ?? '',
-        this.client.user?.id ?? ''
-      ),
+      MESSAGES.EVENTS.READY.LOG(this.client.user?.tag ?? '', this.client.user?.id ?? ''),
       {
         topic: TOPICS.DISCORD,
         event: EVENTS.READY,
       }
     );
-    this.client.user?.setActivity(
-      MESSAGES.EVENTS.READY.ACTIVITY(this.client.user?.username)
-    );
+    this.client.user?.setActivity(MESSAGES.EVENTS.READY.ACTIVITY(this.client.user?.username));
     for (const guild of this.client.guilds.cache.values()) {
       const logs = this.client.settings.get(guild, SETTINGS.GUILD_LOG);
       if (!logs) continue;
     }
+    await this.client.reactionMessages.init();
+    this.client.logger.info(MESSAGES.REACTION_MESSAGES.INIT, {
+      topic: TOPICS.DISCORD_AKAIRO,
+      event: EVENTS.INIT,
+    });
   }
 }

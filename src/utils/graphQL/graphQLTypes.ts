@@ -37,15 +37,6 @@ export type IntComparisonExp = {
   _nin?: Maybe<Array<Scalars['Int']>>;
 };
 
-export type SampleInput = {
-  password: Scalars['String'];
-  username: Scalars['String'];
-};
-
-export type SampleOutput = {
-  accessToken: Scalars['String'];
-};
-
 /** expression to compare columns of type String. All fields are combined with logical 'AND'. */
 export type StringComparisonExp = {
   _eq?: Maybe<Scalars['String']>;
@@ -975,6 +966,14 @@ export type MutationRoot = {
   delete_casesDev_by_pk?: Maybe<CasesDev>;
   /** delete single row from the table: "cases" */
   delete_cases_by_pk?: Maybe<Cases>;
+  /** delete data from the table: "reactionMessages" */
+  delete_reactionMessages?: Maybe<ReactionMessagesMutationResponse>;
+  /** delete data from the table: "reactionMessagesDev" */
+  delete_reactionMessagesDev?: Maybe<ReactionMessagesDevMutationResponse>;
+  /** delete single row from the table: "reactionMessagesDev" */
+  delete_reactionMessagesDev_by_pk?: Maybe<ReactionMessagesDev>;
+  /** delete single row from the table: "reactionMessages" */
+  delete_reactionMessages_by_pk?: Maybe<ReactionMessages>;
   /** delete data from the table: "settings" */
   delete_settings?: Maybe<SettingsMutationResponse>;
   /** delete data from the table: "settingsDev" */
@@ -991,6 +990,14 @@ export type MutationRoot = {
   insert_casesDev_one?: Maybe<CasesDev>;
   /** insert a single row into the table: "cases" */
   insert_cases_one?: Maybe<Cases>;
+  /** insert data into the table: "reactionMessages" */
+  insert_reactionMessages?: Maybe<ReactionMessagesMutationResponse>;
+  /** insert data into the table: "reactionMessagesDev" */
+  insert_reactionMessagesDev?: Maybe<ReactionMessagesDevMutationResponse>;
+  /** insert a single row into the table: "reactionMessagesDev" */
+  insert_reactionMessagesDev_one?: Maybe<ReactionMessagesDev>;
+  /** insert a single row into the table: "reactionMessages" */
+  insert_reactionMessages_one?: Maybe<ReactionMessages>;
   /** insert data into the table: "settings" */
   insert_settings?: Maybe<SettingsMutationResponse>;
   /** insert data into the table: "settingsDev" */
@@ -1007,6 +1014,14 @@ export type MutationRoot = {
   update_casesDev_by_pk?: Maybe<CasesDev>;
   /** update single row of the table: "cases" */
   update_cases_by_pk?: Maybe<Cases>;
+  /** update data of the table: "reactionMessages" */
+  update_reactionMessages?: Maybe<ReactionMessagesMutationResponse>;
+  /** update data of the table: "reactionMessagesDev" */
+  update_reactionMessagesDev?: Maybe<ReactionMessagesDevMutationResponse>;
+  /** update single row of the table: "reactionMessagesDev" */
+  update_reactionMessagesDev_by_pk?: Maybe<ReactionMessagesDev>;
+  /** update single row of the table: "reactionMessages" */
+  update_reactionMessages_by_pk?: Maybe<ReactionMessages>;
   /** update data of the table: "settings" */
   update_settings?: Maybe<SettingsMutationResponse>;
   /** update data of the table: "settingsDev" */
@@ -1039,6 +1054,30 @@ export type MutationRootDeleteCasesDevByPkArgs = {
 /** mutation root */
 export type MutationRootDeleteCasesByPkArgs = {
   id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteReactionMessagesArgs = {
+  where: ReactionMessagesBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteReactionMessagesDevArgs = {
+  where: ReactionMessagesDevBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteReactionMessagesDevByPkArgs = {
+  message: Scalars['String'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteReactionMessagesByPkArgs = {
+  message: Scalars['String'];
 };
 
 
@@ -1091,6 +1130,34 @@ export type MutationRootInsertCasesDevOneArgs = {
 export type MutationRootInsertCasesOneArgs = {
   object: CasesInsertInput;
   on_conflict?: Maybe<CasesOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertReactionMessagesArgs = {
+  objects: Array<ReactionMessagesInsertInput>;
+  on_conflict?: Maybe<ReactionMessagesOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertReactionMessagesDevArgs = {
+  objects: Array<ReactionMessagesDevInsertInput>;
+  on_conflict?: Maybe<ReactionMessagesDevOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertReactionMessagesDevOneArgs = {
+  object: ReactionMessagesDevInsertInput;
+  on_conflict?: Maybe<ReactionMessagesDevOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertReactionMessagesOneArgs = {
+  object: ReactionMessagesInsertInput;
+  on_conflict?: Maybe<ReactionMessagesOnConflict>;
 };
 
 
@@ -1151,6 +1218,54 @@ export type MutationRootUpdateCasesByPkArgs = {
   _inc?: Maybe<CasesIncInput>;
   _set?: Maybe<CasesSetInput>;
   pk_columns: CasesPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateReactionMessagesArgs = {
+  _append?: Maybe<ReactionMessagesAppendInput>;
+  _delete_at_path?: Maybe<ReactionMessagesDeleteAtPathInput>;
+  _delete_elem?: Maybe<ReactionMessagesDeleteElemInput>;
+  _delete_key?: Maybe<ReactionMessagesDeleteKeyInput>;
+  _prepend?: Maybe<ReactionMessagesPrependInput>;
+  _set?: Maybe<ReactionMessagesSetInput>;
+  where: ReactionMessagesBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateReactionMessagesDevArgs = {
+  _append?: Maybe<ReactionMessagesDevAppendInput>;
+  _delete_at_path?: Maybe<ReactionMessagesDevDeleteAtPathInput>;
+  _delete_elem?: Maybe<ReactionMessagesDevDeleteElemInput>;
+  _delete_key?: Maybe<ReactionMessagesDevDeleteKeyInput>;
+  _prepend?: Maybe<ReactionMessagesDevPrependInput>;
+  _set?: Maybe<ReactionMessagesDevSetInput>;
+  where: ReactionMessagesDevBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateReactionMessagesDevByPkArgs = {
+  _append?: Maybe<ReactionMessagesDevAppendInput>;
+  _delete_at_path?: Maybe<ReactionMessagesDevDeleteAtPathInput>;
+  _delete_elem?: Maybe<ReactionMessagesDevDeleteElemInput>;
+  _delete_key?: Maybe<ReactionMessagesDevDeleteKeyInput>;
+  _prepend?: Maybe<ReactionMessagesDevPrependInput>;
+  _set?: Maybe<ReactionMessagesDevSetInput>;
+  pk_columns: ReactionMessagesDevPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateReactionMessagesByPkArgs = {
+  _append?: Maybe<ReactionMessagesAppendInput>;
+  _delete_at_path?: Maybe<ReactionMessagesDeleteAtPathInput>;
+  _delete_elem?: Maybe<ReactionMessagesDeleteElemInput>;
+  _delete_key?: Maybe<ReactionMessagesDeleteKeyInput>;
+  _prepend?: Maybe<ReactionMessagesPrependInput>;
+  _set?: Maybe<ReactionMessagesSetInput>;
+  pk_columns: ReactionMessagesPkColumnsInput;
 };
 
 
@@ -1231,6 +1346,18 @@ export type QueryRoot = {
   cases_aggregate: CasesAggregate;
   /** fetch data from the table: "cases" using primary key columns */
   cases_by_pk?: Maybe<Cases>;
+  /** fetch data from the table: "reactionMessages" */
+  reactionMessages: Array<ReactionMessages>;
+  /** fetch data from the table: "reactionMessagesDev" */
+  reactionMessagesDev: Array<ReactionMessagesDev>;
+  /** fetch aggregated fields from the table: "reactionMessagesDev" */
+  reactionMessagesDev_aggregate: ReactionMessagesDevAggregate;
+  /** fetch data from the table: "reactionMessagesDev" using primary key columns */
+  reactionMessagesDev_by_pk?: Maybe<ReactionMessagesDev>;
+  /** fetch aggregated fields from the table: "reactionMessages" */
+  reactionMessages_aggregate: ReactionMessagesAggregate;
+  /** fetch data from the table: "reactionMessages" using primary key columns */
+  reactionMessages_by_pk?: Maybe<ReactionMessages>;
   /** fetch data from the table: "settings" */
   settings: Array<Settings>;
   /** fetch data from the table: "settingsDev" */
@@ -1299,6 +1426,58 @@ export type QueryRootCasesByPkArgs = {
 
 
 /** query root */
+export type QueryRootReactionMessagesArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesOrderBy>>;
+  where?: Maybe<ReactionMessagesBoolExp>;
+};
+
+
+/** query root */
+export type QueryRootReactionMessagesDevArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesDevSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesDevOrderBy>>;
+  where?: Maybe<ReactionMessagesDevBoolExp>;
+};
+
+
+/** query root */
+export type QueryRootReactionMessagesDevAggregateArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesDevSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesDevOrderBy>>;
+  where?: Maybe<ReactionMessagesDevBoolExp>;
+};
+
+
+/** query root */
+export type QueryRootReactionMessagesDevByPkArgs = {
+  message: Scalars['String'];
+};
+
+
+/** query root */
+export type QueryRootReactionMessagesAggregateArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesOrderBy>>;
+  where?: Maybe<ReactionMessagesBoolExp>;
+};
+
+
+/** query root */
+export type QueryRootReactionMessagesByPkArgs = {
+  message: Scalars['String'];
+};
+
+
+/** query root */
 export type QueryRootSettingsArgs = {
   distinct_on?: Maybe<Array<SettingsSelectColumn>>;
   limit?: Maybe<Scalars['Int']>;
@@ -1349,14 +1528,399 @@ export type QueryRootSettingsByPkArgs = {
   guild: Scalars['String'];
 };
 
-/** columns and relationships of "settings" */
+/** columns and relationships of "reactionMessages" */
+export type ReactionMessages = {
+  channel: Scalars['String'];
+  disabled: Scalars['Boolean'];
+  message: Scalars['String'];
+  reactions: Scalars['jsonb'];
+};
+
+
+/** columns and relationships of "reactionMessages" */
+export type ReactionMessagesReactionsArgs = {
+  path?: Maybe<Scalars['String']>;
+};
+
+/** columns and relationships of "reactionMessagesDev" */
+export type ReactionMessagesDev = {
+  channel: Scalars['String'];
+  disabled: Scalars['Boolean'];
+  message: Scalars['String'];
+  reactions: Scalars['jsonb'];
+};
+
+
+/** columns and relationships of "reactionMessagesDev" */
+export type ReactionMessagesDevReactionsArgs = {
+  path?: Maybe<Scalars['String']>;
+};
+
+/** aggregated selection of "reactionMessagesDev" */
+export type ReactionMessagesDevAggregate = {
+  aggregate?: Maybe<ReactionMessagesDevAggregateFields>;
+  nodes: Array<ReactionMessagesDev>;
+};
+
+/** aggregate fields of "reactionMessagesDev" */
+export type ReactionMessagesDevAggregateFields = {
+  count?: Maybe<Scalars['Int']>;
+  max?: Maybe<ReactionMessagesDevMaxFields>;
+  min?: Maybe<ReactionMessagesDevMinFields>;
+};
+
+
+/** aggregate fields of "reactionMessagesDev" */
+export type ReactionMessagesDevAggregateFieldsCountArgs = {
+  columns?: Maybe<Array<ReactionMessagesDevSelectColumn>>;
+  distinct?: Maybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "reactionMessagesDev" */
+export type ReactionMessagesDevAggregateOrderBy = {
+  count?: Maybe<OrderBy>;
+  max?: Maybe<ReactionMessagesDevMaxOrderBy>;
+  min?: Maybe<ReactionMessagesDevMinOrderBy>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type ReactionMessagesDevAppendInput = {
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** input type for inserting array relation for remote table "reactionMessagesDev" */
+export type ReactionMessagesDevArrRelInsertInput = {
+  data: Array<ReactionMessagesDevInsertInput>;
+  on_conflict?: Maybe<ReactionMessagesDevOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "reactionMessagesDev". All fields are combined with a logical 'AND'. */
+export type ReactionMessagesDevBoolExp = {
+  _and?: Maybe<Array<Maybe<ReactionMessagesDevBoolExp>>>;
+  _not?: Maybe<ReactionMessagesDevBoolExp>;
+  _or?: Maybe<Array<Maybe<ReactionMessagesDevBoolExp>>>;
+  channel?: Maybe<StringComparisonExp>;
+  disabled?: Maybe<BooleanComparisonExp>;
+  message?: Maybe<StringComparisonExp>;
+  reactions?: Maybe<JsonbComparisonExp>;
+};
+
+/** unique or primary key constraints on table "reactionMessagesDev" */
+export enum ReactionMessagesDevConstraint {
+  /** unique or primary key constraint */
+  ReactionMessagesDevPkey = 'reactionMessagesDev_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type ReactionMessagesDevDeleteAtPathInput = {
+  reactions?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type ReactionMessagesDevDeleteElemInput = {
+  reactions?: Maybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type ReactionMessagesDevDeleteKeyInput = {
+  reactions?: Maybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "reactionMessagesDev" */
+export type ReactionMessagesDevInsertInput = {
+  channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
+  message?: Maybe<Scalars['String']>;
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** aggregate max on columns */
+export type ReactionMessagesDevMaxFields = {
+  channel?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+};
+
+/** order by max() on columns of table "reactionMessagesDev" */
+export type ReactionMessagesDevMaxOrderBy = {
+  channel?: Maybe<OrderBy>;
+  message?: Maybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type ReactionMessagesDevMinFields = {
+  channel?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+};
+
+/** order by min() on columns of table "reactionMessagesDev" */
+export type ReactionMessagesDevMinOrderBy = {
+  channel?: Maybe<OrderBy>;
+  message?: Maybe<OrderBy>;
+};
+
+/** response of any mutation on the table "reactionMessagesDev" */
+export type ReactionMessagesDevMutationResponse = {
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data of the affected rows by the mutation */
+  returning: Array<ReactionMessagesDev>;
+};
+
+/** input type for inserting object relation for remote table "reactionMessagesDev" */
+export type ReactionMessagesDevObjRelInsertInput = {
+  data: ReactionMessagesDevInsertInput;
+  on_conflict?: Maybe<ReactionMessagesDevOnConflict>;
+};
+
+/** on conflict condition type for table "reactionMessagesDev" */
+export type ReactionMessagesDevOnConflict = {
+  constraint: ReactionMessagesDevConstraint;
+  update_columns: Array<ReactionMessagesDevUpdateColumn>;
+  where?: Maybe<ReactionMessagesDevBoolExp>;
+};
+
+/** ordering options when selecting data from "reactionMessagesDev" */
+export type ReactionMessagesDevOrderBy = {
+  channel?: Maybe<OrderBy>;
+  disabled?: Maybe<OrderBy>;
+  message?: Maybe<OrderBy>;
+  reactions?: Maybe<OrderBy>;
+};
+
+/** primary key columns input for table: "reactionMessagesDev" */
+export type ReactionMessagesDevPkColumnsInput = {
+  message: Scalars['String'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type ReactionMessagesDevPrependInput = {
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "reactionMessagesDev" */
+export enum ReactionMessagesDevSelectColumn {
+  /** column name */
+  Channel = 'channel',
+  /** column name */
+  Disabled = 'disabled',
+  /** column name */
+  Message = 'message',
+  /** column name */
+  Reactions = 'reactions'
+}
+
+/** input type for updating data in table "reactionMessagesDev" */
+export type ReactionMessagesDevSetInput = {
+  channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
+  message?: Maybe<Scalars['String']>;
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** update columns of table "reactionMessagesDev" */
+export enum ReactionMessagesDevUpdateColumn {
+  /** column name */
+  Channel = 'channel',
+  /** column name */
+  Disabled = 'disabled',
+  /** column name */
+  Message = 'message',
+  /** column name */
+  Reactions = 'reactions'
+}
+
+/** aggregated selection of "reactionMessages" */
+export type ReactionMessagesAggregate = {
+  aggregate?: Maybe<ReactionMessagesAggregateFields>;
+  nodes: Array<ReactionMessages>;
+};
+
+/** aggregate fields of "reactionMessages" */
+export type ReactionMessagesAggregateFields = {
+  count?: Maybe<Scalars['Int']>;
+  max?: Maybe<ReactionMessagesMaxFields>;
+  min?: Maybe<ReactionMessagesMinFields>;
+};
+
+
+/** aggregate fields of "reactionMessages" */
+export type ReactionMessagesAggregateFieldsCountArgs = {
+  columns?: Maybe<Array<ReactionMessagesSelectColumn>>;
+  distinct?: Maybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "reactionMessages" */
+export type ReactionMessagesAggregateOrderBy = {
+  count?: Maybe<OrderBy>;
+  max?: Maybe<ReactionMessagesMaxOrderBy>;
+  min?: Maybe<ReactionMessagesMinOrderBy>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type ReactionMessagesAppendInput = {
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** input type for inserting array relation for remote table "reactionMessages" */
+export type ReactionMessagesArrRelInsertInput = {
+  data: Array<ReactionMessagesInsertInput>;
+  on_conflict?: Maybe<ReactionMessagesOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "reactionMessages". All fields are combined with a logical 'AND'. */
+export type ReactionMessagesBoolExp = {
+  _and?: Maybe<Array<Maybe<ReactionMessagesBoolExp>>>;
+  _not?: Maybe<ReactionMessagesBoolExp>;
+  _or?: Maybe<Array<Maybe<ReactionMessagesBoolExp>>>;
+  channel?: Maybe<StringComparisonExp>;
+  disabled?: Maybe<BooleanComparisonExp>;
+  message?: Maybe<StringComparisonExp>;
+  reactions?: Maybe<JsonbComparisonExp>;
+};
+
+/** unique or primary key constraints on table "reactionMessages" */
+export enum ReactionMessagesConstraint {
+  /** unique or primary key constraint */
+  ReactionMessagesPkey = 'reactionMessages_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type ReactionMessagesDeleteAtPathInput = {
+  reactions?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type ReactionMessagesDeleteElemInput = {
+  reactions?: Maybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type ReactionMessagesDeleteKeyInput = {
+  reactions?: Maybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "reactionMessages" */
+export type ReactionMessagesInsertInput = {
+  channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
+  message?: Maybe<Scalars['String']>;
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** aggregate max on columns */
+export type ReactionMessagesMaxFields = {
+  channel?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+};
+
+/** order by max() on columns of table "reactionMessages" */
+export type ReactionMessagesMaxOrderBy = {
+  channel?: Maybe<OrderBy>;
+  message?: Maybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type ReactionMessagesMinFields = {
+  channel?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+};
+
+/** order by min() on columns of table "reactionMessages" */
+export type ReactionMessagesMinOrderBy = {
+  channel?: Maybe<OrderBy>;
+  message?: Maybe<OrderBy>;
+};
+
+/** response of any mutation on the table "reactionMessages" */
+export type ReactionMessagesMutationResponse = {
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data of the affected rows by the mutation */
+  returning: Array<ReactionMessages>;
+};
+
+/** input type for inserting object relation for remote table "reactionMessages" */
+export type ReactionMessagesObjRelInsertInput = {
+  data: ReactionMessagesInsertInput;
+  on_conflict?: Maybe<ReactionMessagesOnConflict>;
+};
+
+/** on conflict condition type for table "reactionMessages" */
+export type ReactionMessagesOnConflict = {
+  constraint: ReactionMessagesConstraint;
+  update_columns: Array<ReactionMessagesUpdateColumn>;
+  where?: Maybe<ReactionMessagesBoolExp>;
+};
+
+/** ordering options when selecting data from "reactionMessages" */
+export type ReactionMessagesOrderBy = {
+  channel?: Maybe<OrderBy>;
+  disabled?: Maybe<OrderBy>;
+  message?: Maybe<OrderBy>;
+  reactions?: Maybe<OrderBy>;
+};
+
+/** primary key columns input for table: "reactionMessages" */
+export type ReactionMessagesPkColumnsInput = {
+  message: Scalars['String'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type ReactionMessagesPrependInput = {
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "reactionMessages" */
+export enum ReactionMessagesSelectColumn {
+  /** column name */
+  Channel = 'channel',
+  /** column name */
+  Disabled = 'disabled',
+  /** column name */
+  Message = 'message',
+  /** column name */
+  Reactions = 'reactions'
+}
+
+/** input type for updating data in table "reactionMessages" */
+export type ReactionMessagesSetInput = {
+  channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
+  message?: Maybe<Scalars['String']>;
+  reactions?: Maybe<Scalars['jsonb']>;
+};
+
+/** update columns of table "reactionMessages" */
+export enum ReactionMessagesUpdateColumn {
+  /** column name */
+  Channel = 'channel',
+  /** column name */
+  Disabled = 'disabled',
+  /** column name */
+  Message = 'message',
+  /** column name */
+  Reactions = 'reactions'
+}
+
+/**
+ * Configuration for each guild.
+ * 
+ * 
+ * columns and relationships of "settings"
+ */
 export type Settings = {
+  /** The id of the guild settings belong to */
   guild: Scalars['String'];
   settings: Scalars['jsonb'];
 };
 
 
-/** columns and relationships of "settings" */
+/**
+ * Configuration for each guild.
+ * 
+ * 
+ * columns and relationships of "settings"
+ */
 export type SettingsSettingsArgs = {
   path?: Maybe<Scalars['String']>;
 };
@@ -1653,6 +2217,7 @@ export type SettingsOrderBy = {
 
 /** primary key columns input for table: "settings" */
 export type SettingsPkColumnsInput = {
+  /** The id of the guild settings belong to */
   guild: Scalars['String'];
 };
 
@@ -1697,6 +2262,18 @@ export type SubscriptionRoot = {
   cases_aggregate: CasesAggregate;
   /** fetch data from the table: "cases" using primary key columns */
   cases_by_pk?: Maybe<Cases>;
+  /** fetch data from the table: "reactionMessages" */
+  reactionMessages: Array<ReactionMessages>;
+  /** fetch data from the table: "reactionMessagesDev" */
+  reactionMessagesDev: Array<ReactionMessagesDev>;
+  /** fetch aggregated fields from the table: "reactionMessagesDev" */
+  reactionMessagesDev_aggregate: ReactionMessagesDevAggregate;
+  /** fetch data from the table: "reactionMessagesDev" using primary key columns */
+  reactionMessagesDev_by_pk?: Maybe<ReactionMessagesDev>;
+  /** fetch aggregated fields from the table: "reactionMessages" */
+  reactionMessages_aggregate: ReactionMessagesAggregate;
+  /** fetch data from the table: "reactionMessages" using primary key columns */
+  reactionMessages_by_pk?: Maybe<ReactionMessages>;
   /** fetch data from the table: "settings" */
   settings: Array<Settings>;
   /** fetch data from the table: "settingsDev" */
@@ -1761,6 +2338,58 @@ export type SubscriptionRootCasesAggregateArgs = {
 /** subscription root */
 export type SubscriptionRootCasesByPkArgs = {
   id: Scalars['uuid'];
+};
+
+
+/** subscription root */
+export type SubscriptionRootReactionMessagesArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesOrderBy>>;
+  where?: Maybe<ReactionMessagesBoolExp>;
+};
+
+
+/** subscription root */
+export type SubscriptionRootReactionMessagesDevArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesDevSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesDevOrderBy>>;
+  where?: Maybe<ReactionMessagesDevBoolExp>;
+};
+
+
+/** subscription root */
+export type SubscriptionRootReactionMessagesDevAggregateArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesDevSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesDevOrderBy>>;
+  where?: Maybe<ReactionMessagesDevBoolExp>;
+};
+
+
+/** subscription root */
+export type SubscriptionRootReactionMessagesDevByPkArgs = {
+  message: Scalars['String'];
+};
+
+
+/** subscription root */
+export type SubscriptionRootReactionMessagesAggregateArgs = {
+  distinct_on?: Maybe<Array<ReactionMessagesSelectColumn>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<ReactionMessagesOrderBy>>;
+  where?: Maybe<ReactionMessagesBoolExp>;
+};
+
+
+/** subscription root */
+export type SubscriptionRootReactionMessagesByPkArgs = {
+  message: Scalars['String'];
 };
 
 
