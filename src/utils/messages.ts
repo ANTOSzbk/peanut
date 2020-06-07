@@ -79,6 +79,24 @@ export const MESSAGES = {
               `${message.author}, what is the ID of reaction message to remove?`,
             RETRY: (author: User) => `${author}, That is not a valid message ID. Try again.`,
           },
+          NO_MESSAGE: (author: User) =>
+            `${author}, Peanut did not found Reaction-Role message with given ID. Maybe it is not his.`,
+          SUCCESS: (author: User, id: String) =>
+            `${author}, Deleted a reaction role message with **ID**: ${id}.`,
+          UNKNOWN_ERROR: `An unknown error occured while deleting the reaction role message.`,
+        },
+        TOGGLE: {
+          DESCRIPTION: 'Enables/disables a reaction role message with specific ID in the guild.',
+          PROMPT: {
+            START: (message: Message) =>
+              `${message.author}, what is the ID of reaction message to enable/disable?`,
+            RETRY: (author: User) => `${author}, That is not a valid message ID. Try again.`,
+          },
+          NO_MESSAGE: (author: User) =>
+            `${author}, Peanut did not found Reaction-Role message with given ID. Maybe it is not his.`,
+          SUCCESS: (author: User, id: String, toggle: Boolean) =>
+            `${author}, ${!toggle ? 'Disabled' : 'Enabled'} a reaction role message with **ID**: ${id}.`,
+          UNKNOWN_ERROR: `An unknown error occured while enabling/disabling the reaction role message.`,
         },
       },
     },

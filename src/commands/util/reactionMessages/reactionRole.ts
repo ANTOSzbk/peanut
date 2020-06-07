@@ -22,8 +22,7 @@ export default class ReactionRoleCommand extends Command {
       type: [
         ['reaction-role-create', 'create'],
         ['reaction-role-delete', 'delete'],
-        ['reaction-role-disable', 'disable'],
-        ['reaction-role-enable', 'enable'],
+        ['reaction-role-toggle', 'toggle'],
         ['reaction-role-clear', 'clear'],
         ['reaction-role-check', 'check'],
       ],

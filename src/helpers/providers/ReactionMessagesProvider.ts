@@ -54,7 +54,7 @@ export default class ReactionMessagesProvider extends Provider {
     }
   }
 
-  public get<K extends keyof GraphQLReactionMessages, T = undefined>(
+  public get<K extends keyof GraphQLReactionMessages, T>(
     message: string | Message,
     key: K,
     defaultValue?: T
@@ -112,8 +112,8 @@ export default class ReactionMessagesProvider extends Provider {
       },
     });
     let rMessages: GraphQLReactionMessages;
-    if (PRODUCTION) rMessages = res.insert_reactionMessages.returning[0];
-    else rMessages = res.insert_reactionMessagesDev.returning[0];
+    if (PRODUCTION) rMessages = res.update_reactionMessages.returning[0];
+    else rMessages = res.update_reactionMessagesDev.returning[0];
     return rMessages;
   }
 
@@ -128,11 +128,12 @@ export default class ReactionMessagesProvider extends Provider {
       this.items.set(id, data);
     } else this.items.set(id, { channel: channelId, reactions: reactions, disabled: false });
     const { data: res } = await graphQLClient.mutate<any, ReactionMessagesInsertInput>({
-      mutation: MUTATION.UPDATE_REACTION_MESSAGES,
+      mutation: MUTATION.INSERT_REACTION_MESSAGES,
       variables: {
         message: id,
         channel: data ? data.channel : channelId,
         reactions: data ? data.reactions : reactions,
+        disabled: false,
       },
     });
     let rMessages: GraphQLReactionMessages;

@@ -8,16 +8,17 @@ export const QUERY = {
         channel
         message
         reactions
+        disabled
         }
       }
 		`,
 };
 
 export const MUTATION = {
-  UPDATE_REACTION_MESSAGES: gql`
-    mutation($channel: String!, $message: String!, $reactions: jsonb!) {
+  INSERT_REACTION_MESSAGES: gql`
+    mutation($channel: String!, $message: String!, $reactions: jsonb!, $disabled: Boolean) {
       insert_reactionMessages${PRODUCTION ? '' : 'Dev'}(
-        objects: {channel: $channel, message: $message, reactions: $reactions }
+        objects: {channel: $channel, message: $message, reactions: $reactions, disabled: $disabled}
         on_conflict: { constraint: reactionMessages${
           PRODUCTION ? '' : 'Dev'
         }_pkey, update_columns: reactions }
@@ -26,10 +27,32 @@ export const MUTATION = {
           reactions
           message
           channel
+          disabled
         }
       }
     }
   `,
+  UPDATE_REACTION_MESSAGES: gql`
+    mutation(
+      $message: String!,
+      $reactions: jsonb!,
+      $disabled: Boolean,
+      $channel: String!
+    ) {
+      update_reactionMessages${PRODUCTION ? '' : 'Dev'}(
+        _set: { channel: $channel, disabled: $disabled, reactions: $reactions }
+        where: { message: { _eq: $message } }
+      ) {
+        returning {
+          channel
+          disabled
+          message
+          reactions
+        }
+      }
+    }
+  `,
+
   DELETE_REACTION_MESSAGES: gql`
     mutation($message: String!) {
       delete_reactionMessages${PRODUCTION ? '' : 'Dev'}(where: { message: { _eq: $message } }) {
@@ -37,6 +60,7 @@ export const MUTATION = {
           channel
           message
           reactions
+          disabled
         }
       }
     }
