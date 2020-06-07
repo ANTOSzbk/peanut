@@ -9,7 +9,7 @@ import { stripIndents } from 'common-tags';
 // * condition to not duplicate emojis (roles can be duplicated)
 // * color of an embed set by USER
 
-export default class AddReactionMessageCommand extends Command {
+export default class CreateReactionRoleMessageCommand extends Command {
   previewMessage: Message | undefined;
   reactionEmbed: MessageEmbed | undefined;
   arguments: Message[] = [];

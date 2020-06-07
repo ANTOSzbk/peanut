@@ -72,6 +72,14 @@ export const MESSAGES = {
           DESCRIPTION:
             'Shows all the available reaction role messages in the guild with their current status.',
         },
+        DELETE: {
+          DESCRIPTION: 'Deletes a single reaction role message with specific ID from the guild.',
+          PROMPT: {
+            START: (message: Message) =>
+              `${message.author}, what is the ID of reaction message to remove?`,
+            RETRY: (author: User) => `${author}, That is not a valid message ID. Try again.`,
+          },
+        },
       },
     },
     CONFIG: {

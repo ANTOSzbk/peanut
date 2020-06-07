@@ -3,7 +3,7 @@ import { Message, MessageEmbed, Permissions } from 'discord.js';
 import { MESSAGES } from '../../../utils/messages';
 import { TextChannel } from 'discord.js';
 
-export default class CheckConfigCommand extends Command {
+export default class CheckReactionRoleMessagesCommand extends Command {
   public constructor() {
     super('reaction-role-check', {
       description: {

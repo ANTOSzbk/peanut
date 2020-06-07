@@ -2,7 +2,7 @@ import { Command, Flag, PrefixSupplier } from 'discord-akairo';
 import { Message, Permissions } from 'discord.js';
 import { MESSAGES } from '../../../utils/messages';
 
-export default class ConfigCommand extends Command {
+export default class ReactionRoleCommand extends Command {
   public constructor() {
     super('reaction-role', {
       aliases: ['reaction-role', 'rr'],
