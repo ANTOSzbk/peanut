@@ -146,6 +146,7 @@ export default class ReactionMessagesProvider extends Provider {
     const id = this.constructor.getMessageId(message);
     const data = this.items.get(id);
     this.items.delete(id);
+
     data && delete data.reactions;
     const { data: res } = await graphQLClient.mutate<any, ReactionMessagesInsertInput>({
       mutation: MUTATION.DELETE_REACTION_MESSAGES,

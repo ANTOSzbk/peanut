@@ -98,6 +98,14 @@ export const MESSAGES = {
             `${author}, ${!toggle ? 'Disabled' : 'Enabled'} a reaction role message with **ID**: ${id}.`,
           UNKNOWN_ERROR: `An unknown error occured while enabling/disabling the reaction role message.`,
         },
+        CLEAR: {
+          DESCRIPTION: 'Deletes all of reaction role messages in the guild.',
+          NO_MESSAGES: (author: User) =>
+            `${author}, Peanut did not found any Reaction-Role messages in this guild.`,
+          SUCCESS: (author: User) =>
+            `${author}, All reaction role messages in this guild deleted successfully.`,
+          UNKNOWN_ERROR: `An unknown error occured while deleting the reaction role messages.`,
+        },
       },
     },
     CONFIG: {
