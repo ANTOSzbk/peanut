@@ -13,17 +13,21 @@ export default class AddReactionMessageCommand extends Command {
   previewMessage: Message | undefined;
   reactionEmbed: MessageEmbed | undefined;
   arguments: Message[] = [];
+  parsedEmojis: (String | Emoji)[] = [];
   public async before(message: Message) {
+    this.parsedEmojis = [];
+    this.arguments = [];
     this.reactionEmbed = new MessageEmbed()
       .setTitle('Use any of reaction to retrieve a role!')
       .setDescription('Reacting to this message will reward you with a role.')
+      .setColor('DARK_GOLD')
       .setFooter(`Reaction Role Message Preview`);
     this.previewMessage = await message.channel.send(
       stripIndents`**NOTE**: Embed below is a preview. Output message will be send separately.`,
       this.reactionEmbed
     );
   }
-  public async cleanup(message: Message, argsOnly: boolean = false) {
+  private async cleanup(message: Message, argsOnly: boolean = false) {
     if (argsOnly) {
       await message.channel.bulkDelete(this.arguments.length);
       this.arguments = [];
@@ -63,13 +67,21 @@ export default class AddReactionMessageCommand extends Command {
               await msg.react('❎');
               return null;
             }
-            args.map((arg, _, arr) => {
+            args.map(async (arg, _, arr) => {
               const role = this.client.util.resolveRole(arg, msg.guild?.roles.cache!);
               if (role) return (parsedArgs.role = role);
               const unicode = emoji.find(arg);
               const custom = this.client.util.resolveEmoji(arg, msg.guild?.emojis.cache!);
-              if (unicode) return (parsedArgs.emoji = unicode.emoji);
-              if (custom) return (parsedArgs.emoji = custom);
+              if (unicode)
+                if (this.parsedEmojis?.includes(unicode.emoji)) {
+                  await msg.react('❎');
+                  return null;
+                } else return (parsedArgs.emoji = unicode.emoji);
+              if (custom)
+                if (this.parsedEmojis?.includes(custom)) {
+                  await msg.react('❎');
+                  return null;
+                } else return (parsedArgs.emoji = custom);
               if (arr.length > 2 && !role && !unicode && !custom) {
                 const [, , ...description] = arr;
                 return (parsedArgs.optionalText = description.join(' '));
@@ -91,13 +103,14 @@ export default class AddReactionMessageCommand extends Command {
                 const prevContent = this.previewMessage.content;
                 await this.previewMessage.edit(prevContent, this.reactionEmbed);
               }
+              this.parsedEmojis?.push(parsedArgs.emoji);
               return parsedArgs;
             }
             await msg.react('❎');
             return null;
           },
           prompt: {
-            time: 10 * 1000,
+            time: 30 * 1000,
             infinite: true,
             modifyStart: () =>
               stripIndents`\nPlease type in an **EMOJI AND ROLE** as following (order does not matter) \`<emoji> <@MyRole> [optional description]\`
@@ -172,35 +185,37 @@ export default class AddReactionMessageCommand extends Command {
             modifyRetry: () => 'Provided title is too long (max 256 characters). Try again.',
           },
         },
-        // {
-        //   id: 'color',
-        //   match: 'text',
-        //   type: Argument.validate('color', (_msg, phrase, value) => {
-        //     if (phrase === 'skip') {
-        //       this.reactionEmbed?.setColor('blue');
-        //       if (this.previewMessage) {
-        //         const prevContent = this.previewMessage.content;
-        //         this.previewMessage.edit(prevContent, this.reactionEmbed);
-        //       }
-        //     } else {
-        //       this.reactionEmbed?.setColor(value);
-        //       if (this.previewMessage) {
-        //         const prevContent = this.previewMessage.content;
-        //         this.previewMessage.edit(prevContent, this.reactionEmbed);
-        //       }
-        //     }
-        //     return true;
-        //   }),
-        //   prompt: {
-        //     modifyStart: () =>
-        //       stripIndents`\nPlease type in a color for embed in hex or text format \`<color>]\`
-        //     **Example**: \`#FFFFFF/white\`\n
-        //     Type \`skip\` if you want to keep default color or \`cancel\` if you want to start over again.`,
-        //     modifyRetry: () => 'Could not resolve color from the input. Try again.',
-        //     ended: async (msg: Message) => await this.cleanup(msg, true),
-        //     timeout: async (msg: Message) => await this.cleanup(msg, true),
-        //   },
-        // },
+        {
+          id: 'color',
+          match: 'text',
+          type: async (msg, phrase: any) => {
+            await this.cleanup(msg, true);
+            this.arguments?.push(msg);
+            if (!phrase) return null;
+            if (phrase === 'skip') {
+              if (this.previewMessage) {
+                const prevContent = this.previewMessage.content;
+                this.previewMessage.edit(prevContent, this.reactionEmbed);
+                return phrase;
+              }
+            } else if (/^#(?:[0-9a-fA-F]{3}){1,2}$/.test(phrase)) {
+              this.reactionEmbed?.setColor(phrase);
+              if (this.previewMessage) {
+                const prevContent = this.previewMessage.content;
+                this.previewMessage.edit(prevContent, this.reactionEmbed);
+                return phrase;
+              }
+            }
+            return null;
+          },
+          prompt: {
+            modifyStart: () =>
+              stripIndents`\nPlease type in a **COLOR** for embed in hex format \`<color>\`
+            **Example**: \`#e36\`, \`#ffffff\`\n
+            Type \`skip\` if you want to keep default color or \`cancel\` if you want to start over again.`,
+            modifyRetry: () => 'Could not resolve hex color from the input. Try again.',
+          },
+        },
       ],
     });
   }
@@ -208,24 +223,24 @@ export default class AddReactionMessageCommand extends Command {
     message: Message,
     {
       emojiRole,
-      description,
-    }: // description,
-    // title,
-    // color,
-    {
+    }: {
       emojiRole: [{ role: Role; emoji: string | GuildEmoji; optionalText?: String | null }];
-      description: string;
-      //   title: string;
-      //   color: ColorResolvable;
     }
   ) {
     this.reactionEmbed?.addField('\u200b', '\u200b');
     this.reactionEmbed?.setFooter('Reaction Role Message', this.client.user?.displayAvatarURL());
     await this.cleanup(message);
     const reactionMsg = await message.channel.send(this.reactionEmbed);
-    emojiRole.forEach(async (emojiRole) => {
-      await reactionMsg.react(emojiRole.emoji);
-    });
+    const reactions: { emoji: string; role: string }[] = [];
+    for (const emojiR of emojiRole) {
+      await reactionMsg.react(emojiR.emoji);
+      const reaction = {
+        emoji: emojiR.emoji instanceof GuildEmoji ? emojiR.emoji.id : emojiR.emoji,
+        role: emojiR.role.id,
+      };
+      reactions.push(reaction);
+    }
+    await this.client.reactionMessages.create(reactionMsg.id, reactionMsg.channel.id, reactions);
     return;
   }
 }

@@ -25,6 +25,7 @@ export default class ConfigCommand extends Command {
         ['reaction-role-disable', 'disable'],
         ['reaction-role-enable', 'enable'],
         ['reaction-role-clear', 'clear'],
+        ['reaction-role-check', 'check'],
       ],
       otherwise: (msg: Message) => {
         const prefix = (this.handler.prefix as PrefixSupplier)(msg);

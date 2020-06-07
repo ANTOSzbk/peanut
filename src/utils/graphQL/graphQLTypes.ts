@@ -1531,6 +1531,7 @@ export type QueryRootSettingsByPkArgs = {
 /** columns and relationships of "reactionMessages" */
 export type ReactionMessages = {
   channel: Scalars['String'];
+  disabled: Scalars['Boolean'];
   message: Scalars['String'];
   reactions: Scalars['jsonb'];
 };
@@ -1544,6 +1545,7 @@ export type ReactionMessagesReactionsArgs = {
 /** columns and relationships of "reactionMessagesDev" */
 export type ReactionMessagesDev = {
   channel: Scalars['String'];
+  disabled: Scalars['Boolean'];
   message: Scalars['String'];
   reactions: Scalars['jsonb'];
 };
@@ -1598,6 +1600,7 @@ export type ReactionMessagesDevBoolExp = {
   _not?: Maybe<ReactionMessagesDevBoolExp>;
   _or?: Maybe<Array<Maybe<ReactionMessagesDevBoolExp>>>;
   channel?: Maybe<StringComparisonExp>;
+  disabled?: Maybe<BooleanComparisonExp>;
   message?: Maybe<StringComparisonExp>;
   reactions?: Maybe<JsonbComparisonExp>;
 };
@@ -1626,6 +1629,7 @@ export type ReactionMessagesDevDeleteKeyInput = {
 /** input type for inserting data into table "reactionMessagesDev" */
 export type ReactionMessagesDevInsertInput = {
   channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   message?: Maybe<Scalars['String']>;
   reactions?: Maybe<Scalars['jsonb']>;
 };
@@ -1678,6 +1682,7 @@ export type ReactionMessagesDevOnConflict = {
 /** ordering options when selecting data from "reactionMessagesDev" */
 export type ReactionMessagesDevOrderBy = {
   channel?: Maybe<OrderBy>;
+  disabled?: Maybe<OrderBy>;
   message?: Maybe<OrderBy>;
   reactions?: Maybe<OrderBy>;
 };
@@ -1697,6 +1702,8 @@ export enum ReactionMessagesDevSelectColumn {
   /** column name */
   Channel = 'channel',
   /** column name */
+  Disabled = 'disabled',
+  /** column name */
   Message = 'message',
   /** column name */
   Reactions = 'reactions'
@@ -1705,6 +1712,7 @@ export enum ReactionMessagesDevSelectColumn {
 /** input type for updating data in table "reactionMessagesDev" */
 export type ReactionMessagesDevSetInput = {
   channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   message?: Maybe<Scalars['String']>;
   reactions?: Maybe<Scalars['jsonb']>;
 };
@@ -1713,6 +1721,8 @@ export type ReactionMessagesDevSetInput = {
 export enum ReactionMessagesDevUpdateColumn {
   /** column name */
   Channel = 'channel',
+  /** column name */
+  Disabled = 'disabled',
   /** column name */
   Message = 'message',
   /** column name */
@@ -1763,6 +1773,7 @@ export type ReactionMessagesBoolExp = {
   _not?: Maybe<ReactionMessagesBoolExp>;
   _or?: Maybe<Array<Maybe<ReactionMessagesBoolExp>>>;
   channel?: Maybe<StringComparisonExp>;
+  disabled?: Maybe<BooleanComparisonExp>;
   message?: Maybe<StringComparisonExp>;
   reactions?: Maybe<JsonbComparisonExp>;
 };
@@ -1791,6 +1802,7 @@ export type ReactionMessagesDeleteKeyInput = {
 /** input type for inserting data into table "reactionMessages" */
 export type ReactionMessagesInsertInput = {
   channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   message?: Maybe<Scalars['String']>;
   reactions?: Maybe<Scalars['jsonb']>;
 };
@@ -1843,6 +1855,7 @@ export type ReactionMessagesOnConflict = {
 /** ordering options when selecting data from "reactionMessages" */
 export type ReactionMessagesOrderBy = {
   channel?: Maybe<OrderBy>;
+  disabled?: Maybe<OrderBy>;
   message?: Maybe<OrderBy>;
   reactions?: Maybe<OrderBy>;
 };
@@ -1862,6 +1875,8 @@ export enum ReactionMessagesSelectColumn {
   /** column name */
   Channel = 'channel',
   /** column name */
+  Disabled = 'disabled',
+  /** column name */
   Message = 'message',
   /** column name */
   Reactions = 'reactions'
@@ -1870,6 +1885,7 @@ export enum ReactionMessagesSelectColumn {
 /** input type for updating data in table "reactionMessages" */
 export type ReactionMessagesSetInput = {
   channel?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   message?: Maybe<Scalars['String']>;
   reactions?: Maybe<Scalars['jsonb']>;
 };
@@ -1878,6 +1894,8 @@ export type ReactionMessagesSetInput = {
 export enum ReactionMessagesUpdateColumn {
   /** column name */
   Channel = 'channel',
+  /** column name */
+  Disabled = 'disabled',
   /** column name */
   Message = 'message',
   /** column name */

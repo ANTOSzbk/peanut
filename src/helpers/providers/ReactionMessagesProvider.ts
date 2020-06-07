@@ -1,5 +1,5 @@
 import { Provider } from 'discord-akairo';
-import { Guild, Message, Channel } from 'discord.js';
+import { Guild, Message, Channel, Collection } from 'discord.js';
 import { PRODUCTION, ReactionMessages } from '../../utils/constants';
 import { graphQLClient } from '../../utils/graphQL/apolloClient';
 import { QUERY, MUTATION } from '../../utils/queries/reactionMessages';
@@ -11,8 +11,15 @@ import PeanutClient from '../../client/PeanutClient';
 import { TextChannel } from 'discord.js';
 import { TOPICS, EVENTS } from './LoggerProvider';
 
+export type ReactionItems = {
+  channel: string;
+  disabled: boolean | null | undefined;
+  reactions: { emoji: string; role: string }[];
+};
+
 export default class ReactionMessagesProvider extends Provider {
   public ['constructor']: typeof ReactionMessagesProvider;
+  public items!: Collection<string, ReactionItems>;
   public constructor(private readonly client: PeanutClient) {
     super();
   }
@@ -27,18 +34,23 @@ export default class ReactionMessagesProvider extends Provider {
     else rMessages = data.reactionMessagesDev;
     for (const rMessage of rMessages) {
       const messageData = {
-        channel: (rMessage.channel as unknown) as TextChannel,
+        channel: rMessage.channel,
+        disabled: rMessage.disabled,
         reactions: rMessage.reactions,
       };
-      const channel = await messageData.channel.fetch();
-      const message = await channel.messages.fetch(rMessage.message, true);
-      console.log(`Fetched ${message.id}`);
-      message
-        ? this.items.set(rMessage.message, messageData)
-        : this.client.logger.info(`[REACTION_MESSAGE]: Message with ID ${rMessage.message} not found.`, {
-            topic: TOPICS.DISCORD,
-            event: EVENTS.WARN,
-          });
+      try {
+        const channel = (await this.client.channels.fetch(rMessage.channel, true)) as TextChannel;
+        const message = await channel.messages.fetch(rMessage.message, true);
+        console.log(`Fetched ${message.id}`);
+        if (message) this.items.set(rMessage.message, messageData);
+      } catch (err) {
+        this.client.logger.info(`[REACTION_MESSAGE]: Message with ID ${rMessage.message} not found.`, {
+          topic: TOPICS.DISCORD,
+          event: EVENTS.WARN,
+        });
+        this.items.sweep((_value, key) => key === rMessage.message);
+        await this.delete(rMessage.message);
+      }
     }
   }
 
@@ -46,31 +58,81 @@ export default class ReactionMessagesProvider extends Provider {
     message: string | Message,
     key: K,
     defaultValue?: T
-  ): ReactionMessages | any {
+  ): ReactionItems[keyof ReactionItems] | any {
     const id = this.constructor.getMessageId(message);
     if (this.items.has(id)) {
       const rMessage = this.items.get(id);
-      if (key === 'channel') return rMessage.channel ?? undefined;
-      if (key === 'reactions') return rMessage.reactions ?? undefined;
-      if (key === 'message') return rMessage.message ?? undefined;
+      switch (key) {
+        case 'channel':
+          return rMessage!.channel as ReactionItems['channel'];
+        case 'disabled':
+          return rMessage!.disabled as ReactionItems['disabled'];
+        case 'reactions':
+          return rMessage!.reactions as ReactionItems['reactions'];
+        default:
+          break;
+      }
     }
     return defaultValue as T;
   }
 
-  public async set(message: string | Message, channel: string | TextChannel, reactions: any) {
+  public async set<K extends keyof ReactionItems, V extends ReactionItems[keyof ReactionItems]>(
+    message: string | Message,
+    key: K,
+    value: V
+  ) {
     const id = this.constructor.getMessageId(message);
-    const channelId = this.constructor.getChannelId(channel);
-    const data = this.items.get(id) || {};
-    data.reactions = reactions;
-    if (!data.channel) data.channel = channelId;
-    this.items.set(id, data);
-
+    const data = this.items.get(id);
+    const tmp = {
+      channel: data?.channel,
+      reactions: data?.reactions,
+      disabled: data?.disabled,
+    } as ReactionItems;
+    switch (key) {
+      case 'channel':
+        tmp.channel = value as ReactionItems['channel'];
+        break;
+      case 'disabled':
+        tmp.disabled = value as ReactionItems['disabled'];
+        break;
+      case 'reactions':
+        tmp.reactions = value as ReactionItems['reactions'];
+        break;
+      default:
+        break;
+    }
+    this.items.set(id, tmp);
     const { data: res } = await graphQLClient.mutate<any, ReactionMessagesInsertInput>({
       mutation: MUTATION.UPDATE_REACTION_MESSAGES,
       variables: {
         message: id,
-        channel: data.channel ? data.channel : channelId,
-        reactions: data.reactions,
+        channel: tmp.channel,
+        reactions: tmp.reactions,
+        disabled: tmp.disabled,
+      },
+    });
+    let rMessages: GraphQLReactionMessages;
+    if (PRODUCTION) rMessages = res.insert_reactionMessages.returning[0];
+    else rMessages = res.insert_reactionMessagesDev.returning[0];
+    return rMessages;
+  }
+
+  public async create(message: string | Message, channel: string | TextChannel, reactions: any) {
+    const id = this.constructor.getMessageId(message);
+    const channelId = this.constructor.getChannelId(channel);
+    const data = this.items.get(id);
+    if (data) {
+      data.reactions = reactions;
+      data.channel = channelId;
+      data.disabled = false;
+      this.items.set(id, data);
+    } else this.items.set(id, { channel: channelId, reactions: reactions, disabled: false });
+    const { data: res } = await graphQLClient.mutate<any, ReactionMessagesInsertInput>({
+      mutation: MUTATION.UPDATE_REACTION_MESSAGES,
+      variables: {
+        message: id,
+        channel: data ? data.channel : channelId,
+        reactions: data ? data.reactions : reactions,
       },
     });
     let rMessages: GraphQLReactionMessages;
@@ -81,33 +143,31 @@ export default class ReactionMessagesProvider extends Provider {
 
   public async delete(message: string | Message) {
     const id = this.constructor.getMessageId(message);
-    const data = this.items.get(id) || {};
-    delete data.reactions;
+    const data = this.items.get(id);
+    data && delete data.reactions;
 
     const { data: res } = await graphQLClient.mutate<any, ReactionMessagesInsertInput>({
-      mutation: MUTATION.UPDATE_REACTION_MESSAGES,
+      mutation: MUTATION.DELETE_REACTION_MESSAGES,
       variables: {
-        channel: data.channel,
-        reactions: {},
         message: id,
       },
     });
 
     let rMessages: GraphQLReactionMessages;
-    if (PRODUCTION) rMessages = res.insert_reactionMessages.returning[0];
-    else rMessages = res.insert_reactionMessagesDev.returning[0];
+    if (PRODUCTION) rMessages = res.delete_reactionMessages.returning[0];
+    else rMessages = res.delete_reactionMessagesDev.returning[0];
     return rMessages;
   }
 
   public async clear(message: string | Message) {
     const id = this.constructor.getMessageId(message);
-    const data = this.items.get(id) || {};
-    delete data.reactions;
+    const data = this.items.get(id);
+    data && delete data.reactions;
 
     const { data: res } = await graphQLClient.mutate<any, ReactionMessagesInsertInput>({
       mutation: MUTATION.UPDATE_REACTION_MESSAGES,
       variables: {
-        channel: data.channel,
+        channel: data && data.channel,
         reactions: {},
         message: id,
       },
@@ -143,11 +203,12 @@ export default class ReactionMessagesProvider extends Provider {
     throw new TypeError('Invalid channel specified. Must be a Channel instance, channel ID or null.');
   }
 
-  public getReactionMessagesInGuild(guild: string | Guild): string[] {
+  public async getReactionMessagesInGuild(guild: string | Guild): Promise<string[]> {
     const id = this.constructor.getGuildId(guild);
     const reactionMessages = [];
     for (const [key, value] of this.items.entries()) {
-      if (value.guild === id) reactionMessages.push(key);
+      const channel = (await this.client.channels.fetch(value.channel)) as TextChannel;
+      if (channel.guild.id === id) reactionMessages.push(key);
     }
     return reactionMessages;
   }

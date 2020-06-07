@@ -68,6 +68,10 @@ export const MESSAGES = {
         CREATE: {
           DESCRIPTION: 'Creates a reaction role message.',
         },
+        CHECK: {
+          DESCRIPTION:
+            'Shows all the available reaction role messages in the guild with their current status.',
+        },
       },
     },
     CONFIG: {

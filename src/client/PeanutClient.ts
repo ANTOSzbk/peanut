@@ -117,11 +117,6 @@ export default class PeanutClient extends AkairoClient {
       topic: TOPICS.DISCORD_AKAIRO,
       event: EVENTS.INIT,
     });
-    await this.reactionMessages.init();
-    this.logger.info(MESSAGES.REACTION_MESSAGES.INIT, {
-      topic: TOPICS.DISCORD_AKAIRO,
-      event: EVENTS.INIT,
-    });
   }
 
   public async start() {
