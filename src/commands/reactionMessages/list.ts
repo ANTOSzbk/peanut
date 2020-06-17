@@ -3,9 +3,9 @@ import { Message, MessageEmbed, Permissions } from 'discord.js';
 import { MESSAGES } from '../../utils/messages';
 import { TextChannel } from 'discord.js';
 
-export default class CheckReactionRoleMessagesCommand extends Command {
+export default class ListReactionRoleMessagesCommand extends Command {
   public constructor() {
-    super('reaction-role-check', {
+    super('reaction-role-list', {
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CHECK.DESCRIPTION,
       },
@@ -31,7 +31,7 @@ export default class CheckReactionRoleMessagesCommand extends Command {
       const title = message?.embeds[0].title;
       const disabled: boolean = this.client.reactionMessages.get(rrMessage, 'disabled');
       statusEmbed.addField(
-        `${title ? title : ' Reaction-Role Message'}`,
+        `${title !== '\u200b' ? title : ' Reaction-Role Message'}`,
         `[Go to Message](https://discordapp.com/channels/${guild.id}/${channel}/${rrMessage})`,
         true
       );

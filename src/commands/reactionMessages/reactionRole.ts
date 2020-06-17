@@ -24,7 +24,7 @@ export default class ReactionRoleCommand extends Command {
         ['reaction-role-delete', 'delete'],
         ['reaction-role-toggle', 'toggle'],
         ['reaction-role-clear', 'clear'],
-        ['reaction-role-check', 'check'],
+        ['reaction-role-list', 'list'],
       ],
       otherwise: (msg: Message) => {
         const prefix = (this.handler.prefix as PrefixSupplier)(msg);
