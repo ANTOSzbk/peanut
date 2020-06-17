@@ -13,9 +13,9 @@ export default class MuteCommand extends Command {
         content: MESSAGES.COMMANDS.MOD.MUTE.DESCRIPTION,
         usage: '<member> <duration> [--ref=number] [--nsfw] [...reason]',
         examples: [
-          '@Crawl 20m',
-          '@Crawl 20m no u',
-          '@Souji 14d --ref=1234 just stop',
+          '@UserToMute 20m',
+          '@UserToMute 20m get a 20minute rest',
+          '@UserToMute 14d --ref=1234 just shut up',
         ],
       },
       channel: 'guild',

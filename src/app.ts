@@ -24,4 +24,5 @@ client
     })
   )
   .on('warn', (info) => client.logger.warn(info, { topic: TOPICS.DISCORD, event: EVENTS.WARN }));
+
 client.start();

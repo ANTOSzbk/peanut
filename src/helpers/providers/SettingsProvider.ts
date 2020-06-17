@@ -8,8 +8,8 @@ import {
   SettingsInsertInput,
 } from '../../utils/graphQL/graphQLTypes';
 
-export default class HasuraProvider extends Provider {
-  public ['constructor']: typeof HasuraProvider;
+export default class SettingsProvider extends Provider {
+  public ['constructor']: typeof SettingsProvider;
 
   public async init() {
     const { data } = await graphQLClient.query<any, SettingsInsertInput>({

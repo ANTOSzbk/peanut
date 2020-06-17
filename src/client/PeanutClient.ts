@@ -1,6 +1,6 @@
 import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 'discord-akairo';
 import { Message, Collection, Webhook } from 'discord.js';
-import HasuraProvider from '../helpers/providers/SettingsProvider';
+import SettingsProvider from '../helpers/providers/SettingsProvider';
 import ReactionMessagesProvider from '../helpers/providers/ReactionMessagesProvider';
 import CaseHandler from '../helpers/structures/CaseHandler';
 import Queue from '../helpers/structures/Queue';
@@ -17,7 +17,7 @@ declare module 'discord-akairo' {
     caseHandler: CaseHandler;
     muteScheduler: MuteScheduler;
     config: PeanutOptions;
-    settings: HasuraProvider;
+    settings: SettingsProvider;
     reactionMessages: ReactionMessagesProvider;
     webhooks: Collection<string, Webhook>;
     logger: Logger;
@@ -36,7 +36,7 @@ interface PeanutOptions {
 }
 
 export default class PeanutClient extends AkairoClient {
-  public settings = new HasuraProvider();
+  public settings = new SettingsProvider();
   public logger = LoggerProvider;
   public reactionMessages = new ReactionMessagesProvider(this);
 

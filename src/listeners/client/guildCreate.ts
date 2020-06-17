@@ -25,5 +25,6 @@ export default class GuildCreateListener extends Listener {
         event: EVENTS.GUILD_CREATE,
       }
     );
+    !this.client.settings.items.has(guild.id) && this.client.settings.set(guild.id);
   }
 }
