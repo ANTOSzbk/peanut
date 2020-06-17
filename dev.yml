@@ -2,7 +2,7 @@ version: '3.6'
 services:
   postgres:
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgrespassword
   graphql-engine:
@@ -18,14 +18,12 @@ services:
       ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: admin
   bot:
-    depends_on: 
-      - "graphql-engine"
     volumes: 
       - .:/usr/peanut/
     environment: 
       - NODE_ENV=development
     command: ['npm', 'run', 'develop'] 
 volumes:
-  db_data:
+  postgres-data:
     name: "postgres"
   

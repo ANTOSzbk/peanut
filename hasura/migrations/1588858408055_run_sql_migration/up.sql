@@ -1,0 +1,2 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE "public"."casesDev"("id" uuid NOT NULL DEFAULT gen_random_uuid(), "guild" text NOT NULL, "message" text, "case_id" integer NOT NULL, "ref_id" integer, "target_id" text NOT NULL, "target_tag" text NOT NULL, "mod_id" text, "mod_tag" text, "action" integer NOT NULL, "reason" text, "action_duration" timestamptz, "action_processed" boolean DEFAULT true, "created_at" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("id") );

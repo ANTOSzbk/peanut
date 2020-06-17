@@ -1,0 +1,1 @@
+CREATE TABLE "public"."reactionMessages"("guild" text NOT NULL, "channel" text NOT NULL, "message" text NOT NULL, "reactions" jsonb NOT NULL DEFAULT jsonb_build_object(), PRIMARY KEY ("message") , UNIQUE ("message"));

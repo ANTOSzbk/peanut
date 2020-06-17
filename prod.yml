@@ -2,7 +2,7 @@ version: '3.6'
 services:
   postgres:
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgrespassword
   graphql-engine:
@@ -23,6 +23,3 @@ services:
     environment: 
       - NODE_ENV=production
     command: ['npm', 'run', 'start'] 
-volumes:
-  db_data:
-    name: "postgres"

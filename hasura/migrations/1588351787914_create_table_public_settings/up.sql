@@ -1,0 +1,1 @@
+CREATE TABLE "public"."settings"("guild" text NOT NULL DEFAULT 'null', "settings" jsonb NOT NULL, PRIMARY KEY ("guild") , UNIQUE ("guild")); COMMENT ON TABLE "public"."settings" IS E'Configuration for each guild.';
