@@ -5,8 +5,8 @@ Multi-purpose Discord bot in TypeScript.
 
 Development environment:
 
-`docker-compose -f docker-compose.yaml -f dev.yml`
+`docker-compose -f docker-compose.yaml -f dev.yml up`
 
 Production environment:
 
-`docker-compose -f docker-compose.yaml -f prod.yml`
+`docker-compose -f docker-compose.yaml -f prod.yml up`
