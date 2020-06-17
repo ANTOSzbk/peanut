@@ -1,7 +1,6 @@
 import { Command } from 'discord-akairo';
-import { Message, Permissions } from 'discord.js';
+import { Message, Permissions, TextChannel } from 'discord.js';
 import { MESSAGES } from '../../../utils/messages';
-import { TextChannel } from 'discord.js';
 
 export default class DeleteReactionRoleMessageCommand extends Command {
   public constructor() {

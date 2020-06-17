@@ -22,9 +22,12 @@ export default class ReadyListener extends Listener {
     );
     this.client.user?.setActivity(MESSAGES.EVENTS.READY.ACTIVITY(this.client.user?.username));
     for (const guild of this.client.guilds.cache.values()) {
+      const settings = this.client.settings.items.get(guild.id)
+      if (!settings) this.client.settings.set(guild.id);
       const logs = this.client.settings.get(guild, SETTINGS.GUILD_LOG);
       if (!logs) continue;
     }
+
     await this.client.reactionMessages.init();
     this.client.logger.info(MESSAGES.REACTION_MESSAGES.INIT, {
       topic: TOPICS.DISCORD_AKAIRO,
@@ -32,3 +35,5 @@ export default class ReadyListener extends Listener {
     });
   }
 }
+
+

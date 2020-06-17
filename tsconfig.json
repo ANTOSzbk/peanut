@@ -1,13 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es2016",
     "outDir": "build",
     "declaration": false,
     "moduleResolution": "node",
     "alwaysStrict": true,
     "strict": true,
-    "pretty": true
+    "pretty": true,
+    "module": "CommonJS"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

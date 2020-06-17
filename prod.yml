@@ -1,0 +1,28 @@
+version: '3.6'
+services:
+  postgres:
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+  graphql-engine:
+    ports:
+      - '8080:8080'
+    volumes: 
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true' # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to set an admin secret
+      HASURA_GRAPHQL_ADMIN_SECRET: admin
+  bot:
+    volumes: 
+      - .:/usr/peanut/
+    environment: 
+      - NODE_ENV=production
+    command: ['npm', 'run', 'start'] 
+volumes:
+  db_data:
+    name: "postgres"

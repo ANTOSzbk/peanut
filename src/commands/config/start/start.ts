@@ -21,9 +21,8 @@ export default class StartConfigCommand extends Command {
     const commands = this.client.commandHandler.modules.filter(
       (cmd) => cmd.id.match(/config-set-.*/g) !== null
     );
-    const settings: Settings = this.client.settings.items.get(
-      message.guild!.id!
-    );
+    const settings: Settings = this.client.settings.items.get(message.guild!.id!);
+    console.log(settings);
     let skip: string[] = [];
     if (settings.ENTRY_ROLE) {
       skip.push('Entry Role');
@@ -49,16 +48,10 @@ export default class StartConfigCommand extends Command {
       skip.push('Mute Role');
       commands.delete('config-set-mute');
     }
-    if (skip.length)
-      message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.SKIP(skip));
-    if (!commands.size)
-      return message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.EMPTY(prefix));
+    if (skip.length) message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.SKIP(skip));
+    if (!commands.size) return message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.EMPTY(prefix));
     for await (let command of commands.values()) {
-      await this.client.commandHandler.runCommand(
-        message,
-        command,
-        await command.parse(message, '')
-      );
+      await this.client.commandHandler.runCommand(message, command, await command.parse(message, ''));
     }
     return message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.FINISHED(prefix));
   }

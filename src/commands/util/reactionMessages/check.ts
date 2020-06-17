@@ -23,9 +23,8 @@ export default class CheckReactionRoleMessagesCommand extends Command {
       .setThumbnail(guild.iconURL() ?? '')
       .setColor('DARK_GOLD')
       .setTitle(`Reaction-Role Messages`);
-    if (!rrMessages.length)
-      statusEmbed.setDescription('No Reaction-Role messages have been found in this guild.');
-    else statusEmbed.setDescription(`All Reaction-Role messages in ${guild.name} displayed below.`);
+    rrMessages.length ? statusEmbed.setDescription('No Reaction-Role messages have been found in this guild.')
+      : statusEmbed.setDescription(`All Reaction-Role messages in ${guild.name} displayed below.`);
     for (const rrMessage of rrMessages) {
       const channel: string = this.client.reactionMessages.get(rrMessage, 'channel');
       const messageChannel = (await this.client.channels.fetch(channel)) as TextChannel;

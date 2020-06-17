@@ -38,10 +38,10 @@ export default class HasuraProvider extends Provider {
     return defaultValue as T;
   }
 
-  public async set(guild: string | Guild, key: string, value: any) {
+  public async set(guild: string | Guild, key?: string, value?: any) {
     const id = this.constructor.getGuildId(guild);
     const data = this.items.get(id) || {};
-    data[key] = value;
+    if (key && value) data[key] = value;
     this.items.set(id, data);
 
     const { data: res } = await graphQLClient.mutate<any, SettingsInsertInput>({

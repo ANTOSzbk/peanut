@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import 'dotenv/config.js';
 import PeanutClient from './client/PeanutClient';
 import { PeanutGuild } from './helpers/structures/PeanutGuild';
 import { TOPICS, EVENTS } from './helpers/providers/LoggerProvider';
@@ -24,5 +24,4 @@ client
     })
   )
   .on('warn', (info) => client.logger.warn(info, { topic: TOPICS.DISCORD, event: EVENTS.WARN }));
-
 client.start();
