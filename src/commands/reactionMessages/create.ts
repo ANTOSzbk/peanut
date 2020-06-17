@@ -1,13 +1,11 @@
 import { Command } from 'discord-akairo';
 import { Message, Permissions, Role, GuildEmoji, Emoji, MessageEmbed } from 'discord.js';
-import { MESSAGES } from '../../../utils/messages';
+import { MESSAGES } from '../../utils/messages';
 import * as emoji from 'node-emoji';
 import { stripIndents } from 'common-tags';
 
 // TODO:
 // * add support for animated custom emojis
-// * condition to not duplicate emojis (roles can be duplicated)
-// * color of an embed set by USER
 
 export default class CreateReactionRoleMessageCommand extends Command {
   previewMessage: Message | undefined;
@@ -45,7 +43,7 @@ export default class CreateReactionRoleMessageCommand extends Command {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE,
         // usage: '',
       },
-      category: 'util',
+      category: 'reactionMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,
@@ -94,9 +92,9 @@ export default class CreateReactionRoleMessageCommand extends Command {
                   parsedArgs.emoji instanceof Emoji
                     ? `<:${parsedArgs.emoji.name}:${parsedArgs.emoji.id}>`
                     : parsedArgs.emoji
-                }${parsedArgs.optionalText ? ` - ${parsedArgs.optionalText}` : ''} -> <@&${
+                  }${parsedArgs.optionalText ? ` - ${parsedArgs.optionalText}` : ''} -> <@&${
                   parsedArgs.role.id
-                }>`
+                  }>`
               );
               await msg.react('✅');
               if (this.previewMessage) {

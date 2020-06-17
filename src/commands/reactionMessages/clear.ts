@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { Message, Permissions, TextChannel } from 'discord.js';
-import { MESSAGES } from '../../../utils/messages';
+import { MESSAGES } from '../../utils/messages';
 
 export default class DeleteReactionRoleMessageCommand extends Command {
   public constructor() {
@@ -8,7 +8,7 @@ export default class DeleteReactionRoleMessageCommand extends Command {
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CLEAR.DESCRIPTION,
       },
-      category: 'util',
+      category: 'reactionMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,

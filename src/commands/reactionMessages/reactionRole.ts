@@ -1,6 +1,6 @@
 import { Command, Flag, PrefixSupplier } from 'discord-akairo';
 import { Message, Permissions } from 'discord.js';
-import { MESSAGES } from '../../../utils/messages';
+import { MESSAGES } from '../../utils/messages';
 
 export default class ReactionRoleCommand extends Command {
   public constructor() {
@@ -10,7 +10,7 @@ export default class ReactionRoleCommand extends Command {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.DESCRIPTION,
         usage: '<method> <...arguments>',
       },
-      category: 'util',
+      category: 'reactionMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,

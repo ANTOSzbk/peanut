@@ -24,6 +24,7 @@ export default class StartConfigCommand extends Command {
     const settings: Settings = this.client.settings.items.get(message.guild!.id!);
     console.log(settings);
     let skip: string[] = [];
+    commands.delete('config-set-cases');
     if (settings.ENTRY_ROLE) {
       skip.push('Entry Role');
       commands.delete('config-set-entry');
@@ -47,6 +48,10 @@ export default class StartConfigCommand extends Command {
     if (settings.MUTE_ROLE) {
       skip.push('Mute Role');
       commands.delete('config-set-mute');
+    }
+    if (settings.CASES) {
+      skip.push('Cases');
+      commands.delete('config-set-cases')
     }
     if (skip.length) message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.SKIP(skip));
     if (!commands.size) return message.util?.reply(MESSAGES.COMMANDS.CONFIG.START.EMPTY(prefix));

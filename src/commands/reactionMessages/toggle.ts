@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { Message, Permissions } from 'discord.js';
-import { MESSAGES } from '../../../utils/messages';
+import { MESSAGES } from '../../utils/messages';
 
 export default class ToggleReactionRoleMessageCommand extends Command {
   public constructor() {
@@ -8,7 +8,7 @@ export default class ToggleReactionRoleMessageCommand extends Command {
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.TOGGLE.DESCRIPTION,
       },
-      category: 'util',
+      category: 'reactionMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,

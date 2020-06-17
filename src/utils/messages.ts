@@ -58,9 +58,9 @@ export const MESSAGES = {
         Available methods:
         • \`create\` - starts a message creation wizard. 
         • \`clear\` - deletes all RR messages created by Peanut in this guild.   
+        • \`check\` - displays all RR messages created by Peanut in this guild with current status.   
         • \`delete\` \`<message ID>\` - deletes a RR message from channel and Peanut database (requires Discord Developer HUD).
-        • \`disable\` \`<message ID>\` - disables a RR message by given ID (requires Discord Developer HUD).
-        • \`enable\` \`<message ID>\` - enables a disabled RR message by given ID (requires Discord Developer HUD).
+        • \`toggle\` \`<message ID>\` - disables/enables a RR message by given ID (requires Discord Developer HUD).
         `,
         REPLY: (prefix: string | string[] | Promise<string | string[]>) => stripIndents`
         For more information check \`${prefix}help rr\`.
@@ -288,7 +288,7 @@ export const MESSAGES = {
 
         CASES: {
           DESCRIPTION: 'Sets the case number of the guild.',
-          REPLY: (cases: number) => `set cases to **${cases}**`,
+          REPLY: (cases: number) => `Set cases to **${cases}**`,
         },
 
         ENTRY_ROLE: {
@@ -490,7 +490,7 @@ export const MESSAGES = {
         NO_MESSAGE: "looks like the message doesn't exist anymore!",
         REPLY: (ids: number[]) =>
           `Successfully set reason for ${
-            ids.length === 1 ? `case **#${ids[0]}**` : `cases **#${ids[0]}-#${ids[ids.length - 1]}**`
+          ids.length === 1 ? `case **#${ids[0]}**` : `cases **#${ids[0]}-#${ids[ids.length - 1]}**`
           }`,
       },
 
@@ -534,7 +534,7 @@ export const MESSAGES = {
 				**You have been banned from ${guild.name}**
 				${reason ? `\n**Reason:** ${reason}\n` : ''}
 				You can appeal your ban by DMing \`${
-          guild.owner?.user.tag
+        guild.owner?.user.tag
         }\` or guild moderators with a message why you think you deserve to have your ban lifted.
 			`,
       AUDIT: (tag: string, cases: number) => `Banned by ${tag} | Case #${cases}`,

@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { Message, MessageEmbed, Permissions } from 'discord.js';
-import { MESSAGES } from '../../../utils/messages';
+import { MESSAGES } from '../../utils/messages';
 import { TextChannel } from 'discord.js';
 
 export default class CheckReactionRoleMessagesCommand extends Command {
@@ -9,13 +9,12 @@ export default class CheckReactionRoleMessagesCommand extends Command {
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CHECK.DESCRIPTION,
       },
-      category: 'util',
+      category: 'reactionMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,
     });
   }
-
   public async exec(message: Message) {
     const guild = message.guild!;
     const rrMessages = await this.client.reactionMessages.getReactionMessagesInGuild(guild);
@@ -23,7 +22,7 @@ export default class CheckReactionRoleMessagesCommand extends Command {
       .setThumbnail(guild.iconURL() ?? '')
       .setColor('DARK_GOLD')
       .setTitle(`Reaction-Role Messages`);
-    rrMessages.length ? statusEmbed.setDescription('No Reaction-Role messages have been found in this guild.')
+    rrMessages.length === 0 ? statusEmbed.setDescription('No Reaction-Role messages have been found in this guild.')
       : statusEmbed.setDescription(`All Reaction-Role messages in ${guild.name} displayed below.`);
     for (const rrMessage of rrMessages) {
       const channel: string = this.client.reactionMessages.get(rrMessage, 'channel');

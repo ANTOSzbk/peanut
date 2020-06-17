@@ -20,7 +20,7 @@ export default class SetConfigCasesCommand extends Command {
           id: 'cases',
           match: 'content',
           type: 'integer',
-        },
+        }
       ],
     });
   }
