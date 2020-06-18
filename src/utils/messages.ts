@@ -7,10 +7,10 @@ import { GuildMember } from 'discord.js';
 
 export const MESSAGES = {
   SETTINGS: {
-    INIT: 'Bot settings initialized',
+    INIT: 'Bot guilds settings initialized',
   },
   REACTION_MESSAGES: {
-    INIT: 'Reaction messages loaded and initialized.',
+    INIT: 'Reaction messages initialized.',
   },
   COMMAND_HANDLER: {
     PROMPT: {

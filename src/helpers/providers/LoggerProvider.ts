@@ -16,6 +16,7 @@ export enum EVENTS {
   WARN = 'WARN',
   READY = 'READY',
   GUILD_CREATE = 'GUILD_CREATE',
+  GUILD_MEMBER_ADD = 'GUILD_MEMBER_ADD',
   MUTE = 'MUTE',
   IDENTIFY = 'IDENTIFY',
   DESTROY = 'DESTROY',
@@ -38,9 +39,9 @@ export const LoggerProvider = createLogger({
       const { timestamp, label, level, message, topic, event, ...rest } = info;
       return `[${timestamp}][${label}][${level.toUpperCase()}][${topic}]${
         event ? `[${event}]` : ''
-      }: ${message}${
+        }: ${message}${
         Object.keys(rest).length ? `\n${JSON.stringify(rest, null, 2)}` : ''
-      }`;
+        }`;
     })
   ),
   transports: [
