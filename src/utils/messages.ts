@@ -3,6 +3,7 @@ import { stripIndents } from 'common-tags';
 import { User, Guild, Webhook, TextChannel, Message, Role } from 'discord.js';
 import { getGuildChannels, getGuildRoles, getGuildWebhooks } from '../helpers/structures/PeanutGuild';
 import { PrefixSupplier } from 'discord-akairo';
+import { GuildMember } from 'discord.js';
 
 export const MESSAGES = {
   SETTINGS: {
@@ -36,6 +37,10 @@ export const MESSAGES = {
       LOG: (tag: string, guildName: string, guildId: string) =>
         `${yellow(`${tag}`)} just joined ${guildName} [${guildId}].`,
     },
+    GUILD_MEMBER_ADD: {
+      ERROR: (error: any, user: GuildMember) => `There was an error adding entry role to user ${user.user.tag}: ${error}`,
+      ENTRY_ROLE: (user: GuildMember, guild: Guild, role: Role) => `Added role to new user ${user.user.tag} in guild ${guild.name} - ${role.name} [${role.id}].`
+    }
   },
   COMMANDS: {
     PREFIX: {
