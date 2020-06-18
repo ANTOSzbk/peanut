@@ -26,6 +26,9 @@ export default class ReadyListener extends Listener {
       if (!settings) this.client.settings.set(guild.id);
       const logs = this.client.settings.get(guild, SETTINGS.GUILD_LOG);
       if (!logs) continue;
+      const webhook = (await guild.fetchWebhooks()).get(logs);
+      if (!webhook) continue;
+      this.client.webhooks.set(webhook.id, webhook);
     }
 
     await this.client.reactionMessages.init();

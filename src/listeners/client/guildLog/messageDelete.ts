@@ -12,12 +12,15 @@ export default class MessageDeleteGuildLogListener extends Listener {
   }
 
   public async exec(message: Message) {
-    if (message.author.bot) return;
+    console.log(`Deleted ${message.id}.`)
+    // if (message.author.bot) return;
     if (!message.guild) return;
     if (!message.content) return;
     const guildLogs = this.client.settings.get(message.guild, SETTINGS.GUILD_LOG);
+    console.log(guildLogs)
     if (guildLogs) {
       const webhook = this.client.webhooks.get(guildLogs);
+      console.log(webhook)
       if (!webhook) return;
       const attachment = message.attachments.first();
       const embed = new MessageEmbed()

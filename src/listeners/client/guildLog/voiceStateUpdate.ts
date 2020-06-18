@@ -36,7 +36,7 @@ export default class VoiceStateUpdateGuildLogListener extends Listener {
         return;
       }
 
-      return webhook.send({
+      return await webhook.send({
         embeds: [embed],
         username: 'Logs: VOICE STATE UPDATE',
         avatarURL: 'https://i.imgur.com/wmsJNiu.png',

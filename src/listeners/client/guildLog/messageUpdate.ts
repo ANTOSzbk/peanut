@@ -1,7 +1,7 @@
 import { Listener } from 'discord-akairo';
 import { Message, MessageEmbed, Util } from 'discord.js';
 import { SETTINGS } from '../../../utils/constants';
-import * as diff from 'diff'; // eslint-disable-line
+import * as diff from 'diff';
 
 export default class MessageUpdateGuildLogListener extends Listener {
   public constructor() {
