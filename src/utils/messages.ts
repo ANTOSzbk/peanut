@@ -2,7 +2,6 @@ import { yellow, blue } from 'chalk';
 import { stripIndents } from 'common-tags';
 import { User, Guild, Webhook, TextChannel, Message, Role } from 'discord.js';
 import { getGuildChannels, getGuildRoles, getGuildWebhooks } from '../helpers/structures/PeanutGuild';
-import { PrefixSupplier } from 'discord-akairo';
 import { GuildMember } from 'discord.js';
 
 export const MESSAGES = {
@@ -10,7 +9,7 @@ export const MESSAGES = {
     INIT: 'Bot guilds settings initialized',
   },
   REACTION_MESSAGES: {
-    INIT: 'Reaction messages initialized.',
+    INIT: 'Reaction role messages initialized',
   },
   COMMAND_HANDLER: {
     PROMPT: {
@@ -60,18 +59,35 @@ export const MESSAGES = {
     UTIL: {
       REACTION_MESSAGES: {
         DESCRIPTION: stripIndents`With this command you can create a Reaction Role ('RR') Message.
-        Available methods:
-        • \`create\` - starts a message creation wizard. 
-        • \`clear\` - deletes all RR messages created by Peanut in this guild.   
-        • \`check\` - displays all RR messages created by Peanut in this guild with current status.   
-        • \`delete\` \`<message ID>\` - deletes a RR message from channel and Peanut database (requires Discord Developer HUD).
-        • \`toggle\` \`<message ID>\` - disables/enables a RR message by given ID (requires Discord Developer HUD).
+        **Available methods:**
+        > • \`create\` - starts a message creation wizard. 
+        > • \`clear\` - deletes all RR messages created by Peanut in this guild.   
+        > • \`check\` - displays all RR messages created by Peanut in this guild with current status.   
+        > • \`delete\` \`<message ID>\` - deletes a RR message from channel and Peanut database (requires Discord Developer HUD).
+        > • \`toggle\` \`<message ID>\` - disables/enables a RR message by given ID (requires Discord Developer HUD).
         `,
         REPLY: (prefix: string | string[] | Promise<string | string[]>) => stripIndents`
         For more information check \`${prefix}help rr\`.
         `,
         CREATE: {
           DESCRIPTION: 'Creates a reaction role message.',
+          PROMPTS: {
+            PROMPT_1: stripIndents`\nPlease type in an **EMOJI AND ROLE** as following (order does not matter) \`<emoji> <@MyRole> [optional description]\`
+              **Example**: \`🍔 @Hamburger Lover for hamburger lovers\`\n 
+              Type \`stop\` whenever you are done or \`cancel\` if you want to start over again.`,
+            PROMPT_2: stripIndents`\nPlease type in a **DESCRIPTION** for embed \`<description>\`
+            **Example**: \`Reacting to this message will reward you with a role.\`\n
+            Type \`skip\` if you don't want any description or \`cancel\` if you want to start over again.`,
+            PROMPT_3: stripIndents`\nPlease type in a **TITLE** for embed \`<title>\`
+            **Example**: \`Use any of reaction to retrieve a role!\`\n
+            Type \`skip\` if you don't want any title or \`cancel\` if you want to start over again.`,
+            PROMPT_4: stripIndents`\nPlease type in a **COLOR** for embed in hex format \`<color>\`
+            **Example**: \`#e36\`, \`#ffffff\`\n
+            Type \`skip\` if you want to keep default color or \`cancel\` if you want to start over again.`,
+            TOO_LONG: (str: string) => `Provided ${str} is too long (max 256 characters). Try again.`,
+            INVALID_COLOR: 'Could not resolve hex color from the input. Try again.'
+
+          }
         },
         CHECK: {
           DESCRIPTION:
@@ -114,22 +130,30 @@ export const MESSAGES = {
       },
     },
     CONFIG: {
-      DESCRIPTION: stripIndents`Available methods:
-      • set \`<key> <...arguments>\`
-      • delete \`<key>\`
-      • clear
-      • toggle \`<key>\`
-      Available keys:
-      • mod \`<Role/RoleId>\`
-      • logs \`<webhook>\`
-      • memberLog \`<Channel/ChannelId>\` \`mention?[Yes/No]\`
-      • modLog \`<Channel/ChannelId>\`
-      • muted \`<Role/RoleId>\`
+      DESCRIPTION: stripIndents`**Available methods:**
+      > • \`start\` - starts the configuration wizard (RECOMMENDED).
+      > • \`check\` - shows the current configuration status.
+      > • \`set\` \`<key> <...arguments>\` - sets the selected configuration key to provided value.
+      > • \`delete\` \`<key>\` - removes the selected configuration key or restores default.
+      > • \`clear\` - clears ALL configuration keys and restore defaults.
+      > • \`toggle\` \`<key>\` - enables/disables the selected key.
+      
+      **Available keys:**
+      > • \`mod\` \`<role / role ID>\` - moderation role module.
+      > • \`logs\` \`<webhook>\` - guild log module.
+      > • \`memberlog\` \`<channel / channel ID>\` \`mention? [yes / no]\` - member log module (joined/left).
+      > • \`modlog\` \`<channel / channel ID>\` - moderation event log module.
+      > • \`muted\` \`<role / role ID>\` - mute role module.
+      
+      > **Example:** 
+      \`config delete mod\` - removes moderation role from Peanut config
+      or 
+      \`config set memberlog #welcome\` - sets Member Log channel to **#welcome** without mention.
+
       Required: \`<>\` | Optional: \`[]\`
       `,
       REPLY: (prefix: string | string[] | Promise<string | string[]>) => stripIndents`
-      When you beg me so much I just can't not help you~
-      Check \`${prefix}help config\` for more information.
+      For more information check \`${prefix}help config\`.
       `,
       CREATE_WEBHOOK: {
         DESCRIPTION: 'Creates a Webhook in the guild on a newly created channel',
@@ -195,8 +219,7 @@ export const MESSAGES = {
       DELETE: {
         DESCRIPTION: 'Deletes a value to the config.',
         REPLY: (prefix: string | string[] | Promise<string | string[]>) => stripIndents`
-					When you beg me so much I just can't not help you~
-					Check \`${prefix}help config\` for more information.
+					For more information check \`${prefix}help config\`.
 				`,
         GUILD_LOG: {
           DESCRIPTION: 'Deletes logs on the server.',
@@ -235,72 +258,19 @@ export const MESSAGES = {
       SET: {
         DESCRIPTION: 'Sets a value to the config.',
         REPLY: (prefix: string | string[] | Promise<string | string[]>) => stripIndents`
-        When you beg me so much I just can't not help you~
-        Check \`${prefix}help config\` for more information.
+          For more information check \`${prefix}help config\`.
       `,
-
-        RESTRICT: {
-          DESCRIPTION: 'Sets the restriction roles of the guild.',
-          REPLY: (prefix: string | string[] | Promise<string | string[]>) => stripIndents`
-          When you beg me so much I just can't not help you~
-          Check \`${prefix}help config\` for more information.
-        `,
-
-          EMBED: {
-            DESCRIPTION: 'Sets the restriction role for embeds of the guild.',
-            PROMPT: {
-              START: (author: User | null) =>
-                `${author}, what role should act as the embed restricted role?`,
-              RETRY: (author: User | null) =>
-                `${author}, please mention a proper role to be the embed restricted role.`,
-            },
-            REPLY: (role: string) => `set restricted role for embeds to **${role}**`,
-          },
-
-          EMOJI: {
-            DESCRIPTION: 'Sets the restriction role for emojis of the guild.',
-            PROMPT: {
-              START: (author: User | null) =>
-                `${author}, what role should act as the emoji restricted role?`,
-              RETRY: (author: User | null) =>
-                `${author}, please mention a proper role to be the emoji restricted role.`,
-            },
-            REPLY: (role: string) => `set restricted role for emojis to **${role}**`,
-          },
-
-          REACTION: {
-            DESCRIPTION: 'Sets the restriction role for reactions of the guild.',
-            PROMPT: {
-              START: (author: User | null) =>
-                `${author}, what role should act as the reaction restricted role?`,
-              RETRY: (author: User | null) =>
-                `${author}, please mention a proper role to be the reaction restricted role.`,
-            },
-            REPLY: (role: string) => `set restricted role for reactions to **${role}**`,
-          },
-
-          TAG: {
-            DESCRIPTION: 'Sets the restriction role for tags of the guild.',
-            PROMPT: {
-              START: (author: User | null) =>
-                `${author}, what role should act as the tag restricted role?`,
-              RETRY: (author: User | null) =>
-                `${author}, please mention a proper role to be the tag restricted role.`,
-            },
-            REPLY: (role: string) => `set restricted role for tags to **${role}**`,
-          },
-        },
-
         CASES: {
           DESCRIPTION: 'Sets the case number of the guild.',
           REPLY: (cases: number) => `Set cases to **${cases}**`,
         },
-
         ENTRY_ROLE: {
           DESCRIPTION: 'Sets entry role of the guild.',
           PROMPT: {
             START: async (message: Message) => {
               const roles = getGuildRoles(message.guild!);
+              if (roles.length > 5) return stripIndents(`${message.author}, what role should become entry Role? 
+              **Example:** \`@Entryrole\`.`)
               const options = [`**0** - create new entry Role`];
               roles.forEach((role, i) => options.push(`**${i + 1}** - <@&${role.id}>`));
               return stripIndents(`${message.author}, what role should become entry Role?
@@ -334,6 +304,8 @@ export const MESSAGES = {
           PROMPT: {
             START: (message: Message) => {
               const channels = getGuildChannels(message.guild!);
+              if (channels.length > 5) return stripIndents(`${message.author}, what channel should become Member Log channel? 
+              **Example:** \`#memberlog-channel\`.`)
               const options: any[] = [`**0** - create new member log Channel`];
               channels.forEach((channel, i) => options.push(`**${i + 1}** - <#${channel.id}>`));
               return stripIndents(`${message.author}, what Channel should be member log channel?
@@ -352,6 +324,8 @@ export const MESSAGES = {
           PROMPT: {
             START: async (message: Message) => {
               const roles = getGuildRoles(message.guild!);
+              if (roles.length > 5) return stripIndents(`${message.author}, what role should become Moderator Role? 
+              **Example:** \`@Moderator\`.`)
               const options = [`**0** - create new moderator Role`];
               roles.forEach((role, i) => options.push(`**${i + 1}** - <@&${role.id}>`));
               return stripIndents(`${message.author}, what Role should become moderator Role?
@@ -366,6 +340,8 @@ export const MESSAGES = {
           PROMPT: {
             START: (message: Message) => {
               const channels = getGuildChannels(message.guild!);
+              if (channels.length > 5) return stripIndents(`${message.author}, what channel should become Mod Log channel? 
+              **Example:** \`#modlog-channel\`.`)
               const options: any[] = [`**0** - create new mod log Channel`];
               channels.forEach((channel, i) => options.push(`**${i + 1}** - <#${channel.id}>`));
               return stripIndents(`${message.author}, what Channel should be mod log channel?
@@ -382,6 +358,8 @@ export const MESSAGES = {
           PROMPT: {
             START: async (message: Message) => {
               const roles = getGuildRoles(message.guild!);
+              if (roles.length > 6) return stripIndents(`${message.author}, what role should become Mute Role? 
+              **Example:** \`@Muted\`.`)
               const options = [`**0** - create new mute Role`];
               roles.forEach((role, i) => options.push(`**${i + 1}** - <@&${role.id}>`));
               return stripIndents(`${message.author}, what Role should become mute Role?
@@ -412,7 +390,7 @@ export const MESSAGES = {
           },
           NO_CASE_NUMBER: 'at least provide me with a correct number.',
           NO_CASE:
-            "I looked where I could, but I couldn't find a case with that Id, maybe look for something that actually exists next time!",
+            "I looked where I could, but I couldn't find a case with that ID, maybe look for something that actually exists next time!",
           DELETE: 'You sure you want me to delete this case?',
           DELETING: (id: number) => `Deleting **${id}**...`,
           TIMEOUT: 'timed out. Cancelled delete.',

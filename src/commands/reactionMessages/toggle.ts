@@ -8,7 +8,7 @@ export default class ToggleReactionRoleMessageCommand extends Command {
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.TOGGLE.DESCRIPTION,
       },
-      category: 'reactionMessages',
+      category: 'reactionRoleMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,

@@ -26,12 +26,14 @@ export default class HelpCommand extends Command {
     const prefix = (this.handler.prefix as PrefixSupplier)(message);
     if (!command) {
       const embed = new MessageEmbed()
-        .setColor(3447003)
-        .addField('❯ Commands', MESSAGES.COMMANDS.HELP.REPLY(prefix));
+        .setColor('DARK_GOLD')
+        .addField('> Commands', MESSAGES.COMMANDS.HELP.REPLY(prefix));
 
       for (const category of this.handler.categories.values()) {
+        const regExp = /([^A-Z])([A-Z])/g;
         embed.addField(
-          `❯ ${category.id.replace(/(\b\w)/gi, (lc) => lc.toUpperCase())}`,
+          // `> ${category.id.replace(/(\b\w)/gi, (lc) => lc.toUpperCase())}`,
+          `> ${category.id.charAt(0).toUpperCase() + category.id.replace(regExp, '$1 $2').slice(1)}`,
           `${category
             .filter((cmd) => cmd.aliases.length > 0)
             .map((cmd) => `\`${cmd.aliases[0]}\``)
@@ -43,7 +45,7 @@ export default class HelpCommand extends Command {
     }
 
     const embed = new MessageEmbed()
-      .setColor(3447003)
+      .setColor('DARK_GOLD')
       .setTitle(`\`${command.aliases[0]} ${command.description.usage || ''}\``)
       .addField('❯ Description', command.description.content || '\u200b');
 

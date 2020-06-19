@@ -43,14 +43,14 @@ export default class CreateReactionRoleMessageCommand extends Command {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE,
         // usage: '',
       },
-      category: 'reactionMessages',
+      category: 'reactionRoleMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,
       argumentDefaults: {},
       args: [
         {
-          id: 'emojiRole',
+          id: 'emojiRoles',
           match: 'text',
           type: async (msg, phrase) => {
             const parsedArgs: {
@@ -108,12 +108,10 @@ export default class CreateReactionRoleMessageCommand extends Command {
             return null;
           },
           prompt: {
-            time: 30 * 1000,
+            time: 60 * 1000,
             infinite: true,
             modifyStart: () =>
-              stripIndents`\nPlease type in an **EMOJI AND ROLE** as following (order does not matter) \`<emoji> <@MyRole> [optional description]\`
-              **Example**: \`🍔 @Hamburger Lover for hamburger lovers\`\n 
-              Type \`stop\` whenever you are done or \`cancel\` if you want to start over again.`,
+              MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PROMPTS.PROMPT_1,
             modifyRetry: undefined,
           },
         },
@@ -144,11 +142,9 @@ export default class CreateReactionRoleMessageCommand extends Command {
           prompt: {
             modifyStart: async (msg) => {
               await msg.util?.lastResponse
-                ?.edit(stripIndents`\nPlease type in a **DESCRIPTION** for embed \`<description>\`
-            **Example**: \`Reacting to this message will reward you with a role.\`\n
-            Type \`skip\` if you don't want any description or \`cancel\` if you want to start over again.`);
+                ?.edit(MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PROMPTS.PROMPT_2);
             },
-            modifyRetry: () => 'Provided description is too long (max 256 characters). Try again.',
+            modifyRetry: () => MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PROMPTS.TOO_LONG('description'),
           },
         },
         {
@@ -177,10 +173,8 @@ export default class CreateReactionRoleMessageCommand extends Command {
           },
           prompt: {
             modifyStart: () =>
-              stripIndents`\nPlease type in a **TITLE** for embed \`<title>\`
-            **Example**: \`Use any of reaction to retrieve a role!\`\n
-            Type \`skip\` if you don't want any title or \`cancel\` if you want to start over again.`,
-            modifyRetry: () => 'Provided title is too long (max 256 characters). Try again.',
+              MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PROMPTS.PROMPT_3,
+            modifyRetry: () => MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PROMPTS.TOO_LONG('title'),
           },
         },
         {
@@ -208,10 +202,8 @@ export default class CreateReactionRoleMessageCommand extends Command {
           },
           prompt: {
             modifyStart: () =>
-              stripIndents`\nPlease type in a **COLOR** for embed in hex format \`<color>\`
-            **Example**: \`#e36\`, \`#ffffff\`\n
-            Type \`skip\` if you want to keep default color or \`cancel\` if you want to start over again.`,
-            modifyRetry: () => 'Could not resolve hex color from the input. Try again.',
+              MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PROMPTS.PROMPT_4,
+            modifyRetry: () => MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PROMPTS.INVALID_COLOR,
           },
         },
       ],
@@ -220,9 +212,9 @@ export default class CreateReactionRoleMessageCommand extends Command {
   public async exec(
     message: Message,
     {
-      emojiRole,
+      emojiRoles,
     }: {
-      emojiRole: [{ role: Role; emoji: string | GuildEmoji; optionalText?: String | null }];
+      emojiRoles: [{ role: Role; emoji: string | GuildEmoji; optionalText?: String | null }];
     }
   ) {
     this.reactionEmbed?.addField('\u200b', '\u200b');
@@ -230,11 +222,11 @@ export default class CreateReactionRoleMessageCommand extends Command {
     await this.cleanup(message);
     const reactionMsg = await message.channel.send(this.reactionEmbed);
     const reactions: { emoji: string; role: string }[] = [];
-    for (const emojiR of emojiRole) {
-      await reactionMsg.react(emojiR.emoji);
+    for (const emojiRole of emojiRoles) {
+      await reactionMsg.react(emojiRole.emoji);
       const reaction = {
-        emoji: emojiR.emoji instanceof GuildEmoji ? emojiR.emoji.id : emojiR.emoji,
-        role: emojiR.role.id,
+        emoji: emojiRole.emoji instanceof GuildEmoji ? emojiRole.emoji.id : emojiRole.emoji,
+        role: emojiRole.role.id,
       };
       reactions.push(reaction);
     }

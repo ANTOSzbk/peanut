@@ -8,9 +8,9 @@ export default class ReactionRoleCommand extends Command {
       aliases: ['reaction-role', 'rr'],
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.DESCRIPTION,
-        usage: '<method> <...arguments>',
+        usage: '<method> <...message ID>',
       },
-      category: 'reactionMessages',
+      category: 'reactionRoleMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,

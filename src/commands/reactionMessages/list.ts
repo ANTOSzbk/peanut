@@ -9,7 +9,7 @@ export default class ListReactionRoleMessagesCommand extends Command {
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CHECK.DESCRIPTION,
       },
-      category: 'reactionMessages',
+      category: 'reactionRoleMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,
@@ -35,8 +35,10 @@ export default class ListReactionRoleMessagesCommand extends Command {
         `[Go to Message](https://discordapp.com/channels/${guild.id}/${channel}/${rrMessage})`,
         true
       );
-      statusEmbed.addField('Status', `${disabled ? 'Disabled ❌' : 'Enabled ✔️'}`, true);
+      statusEmbed.addField('Status', `${disabled ? '**Disabled `❌`**' : '**Enabled `✔️`**'}`, true);
       statusEmbed.addField('\u200b', '\u200b', true);
+      statusEmbed.setFooter(`${message?.guild?.name} reaction role messages list`, this.client.user?.displayAvatarURL())
+      statusEmbed.setTimestamp(new Date())
     }
     return message.util?.send(statusEmbed);
   }

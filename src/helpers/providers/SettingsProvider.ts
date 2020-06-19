@@ -1,6 +1,6 @@
 import { Provider } from 'discord-akairo';
 import { Guild } from 'discord.js';
-import { PRODUCTION, Settings } from '../../utils/constants';
+import { PRODUCTION, Settings, SETTINGS } from '../../utils/constants';
 import { graphQLClient } from '../../utils/graphQL/apolloClient';
 import { QUERY, MUTATION } from '../../utils/queries/settings';
 import {
@@ -41,7 +41,7 @@ export default class SettingsProvider extends Provider {
   public async set(guild: string | Guild, key?: string, value?: any) {
     const id = this.constructor.getGuildId(guild);
     const data = this.items.get(id) || {};
-    if (key && value) data[key] = value;
+    if (key && value || key === SETTINGS.MODERATION && value === false) data[key] = value;
     this.items.set(id, data);
 
     const { data: res } = await graphQLClient.mutate<any, SettingsInsertInput>({

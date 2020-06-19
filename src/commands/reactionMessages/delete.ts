@@ -8,7 +8,7 @@ export default class DeleteReactionRoleMessageCommand extends Command {
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.DELETE.DESCRIPTION,
       },
-      category: 'reactionMessages',
+      category: 'reactionRoleMessages',
       channel: 'guild',
       userPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       ratelimit: 2,
