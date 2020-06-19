@@ -5,10 +5,11 @@ import { MESSAGES } from '../../utils/messages';
 export default class ReactionRoleCommand extends Command {
   public constructor() {
     super('reaction-role', {
-      aliases: ['reaction-role', 'rr'],
+      aliases: ['rr', 'reaction-role'],
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.DESCRIPTION,
         usage: '<method> <...message ID>',
+        examples: [`create`, `delete 723626017150730280`]
       },
       category: 'reactionRoleMessages',
       channel: 'guild',

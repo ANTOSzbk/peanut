@@ -16,12 +16,12 @@ export default class CreateReactionRoleMessageCommand extends Command {
     this.parsedEmojis = [];
     this.arguments = [];
     this.reactionEmbed = new MessageEmbed()
-      .setTitle('Use any of reaction to retrieve a role!')
-      .setDescription('Reacting to this message will reward you with a role.')
+      .setTitle(MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PREVIEW_EMBED.TITLE)
+      .setDescription(MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PREVIEW_EMBED.DESCRIPTION)
       .setColor('DARK_GOLD')
-      .setFooter(`Reaction Role Message Preview`);
+      .setFooter(MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PREVIEW_EMBED.FOOTER_BEFORE);
     this.previewMessage = await message.channel.send(
-      stripIndents`**NOTE**: Embed below is a preview. Output message will be send separately.`,
+      MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PREVIEW_EMBED.NOTE,
       this.reactionEmbed
     );
   }
@@ -38,10 +38,9 @@ export default class CreateReactionRoleMessageCommand extends Command {
   }
   public constructor() {
     super('reaction-role-create', {
-      // aliases: ['create'],
       description: {
         content: MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE,
-        // usage: '',
+        usage: 'Only prompting.',
       },
       category: 'reactionRoleMessages',
       channel: 'guild',
@@ -218,7 +217,7 @@ export default class CreateReactionRoleMessageCommand extends Command {
     }
   ) {
     this.reactionEmbed?.addField('\u200b', '\u200b');
-    this.reactionEmbed?.setFooter('Reaction Role Message', this.client.user?.displayAvatarURL());
+    this.reactionEmbed?.setFooter(MESSAGES.COMMANDS.UTIL.REACTION_MESSAGES.CREATE.PREVIEW_EMBED.FOOTER_AFTER, this.client.user?.displayAvatarURL());
     await this.cleanup(message);
     const reactionMsg = await message.channel.send(this.reactionEmbed);
     const reactions: { emoji: string; role: string }[] = [];

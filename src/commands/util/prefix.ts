@@ -1,7 +1,7 @@
 import { Command, PrefixSupplier } from 'discord-akairo';
 import { Message, Permissions } from 'discord.js';
-import { MESSAGES } from '../utils/messages';
-import { SETTINGS } from '../utils/constants';
+import { MESSAGES } from '../../utils/messages';
+import { SETTINGS } from '../../utils/constants';
 
 export default class PrefixCommand extends Command {
   public constructor() {
@@ -10,7 +10,7 @@ export default class PrefixCommand extends Command {
       description: {
         content: MESSAGES.COMMANDS.PREFIX.DESCRIPTION,
         usage: '[prefix]',
-        examples: ['!', 'mycustomprefix'],
+        examples: ['!', 'peanut;;'],
       },
       category: 'util',
       channel: 'guild',

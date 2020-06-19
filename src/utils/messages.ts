@@ -6,10 +6,10 @@ import { GuildMember } from 'discord.js';
 
 export const MESSAGES = {
   SETTINGS: {
-    INIT: 'Bot guilds settings initialized',
+    INIT: 'Bot guilds settings loaded and initialized',
   },
   REACTION_MESSAGES: {
-    INIT: 'Reaction role messages initialized',
+    INIT: 'Reaction role messages loaded and initialized',
   },
   COMMAND_HANDLER: {
     PROMPT: {
@@ -22,7 +22,7 @@ export const MESSAGES = {
     LOADED: 'Command handler loaded',
   },
   LISTENER_HANDLER: {
-    LOADED: 'Listener handler loadeed',
+    LOADED: 'Listener handler loaded',
   },
   INHIBITOR_HANDLER: {
     LOADED: 'Inhibitor handler loaded',
@@ -58,11 +58,11 @@ export const MESSAGES = {
     },
     UTIL: {
       REACTION_MESSAGES: {
-        DESCRIPTION: stripIndents`With this command you can create a Reaction Role ('RR') Message.
+        DESCRIPTION: stripIndents`With this command you can create a *Reaction-Role* ('**rr**') message.
         **Available methods:**
         > • \`create\` - starts a message creation wizard. 
         > • \`clear\` - deletes all RR messages created by Peanut in this guild.   
-        > • \`check\` - displays all RR messages created by Peanut in this guild with current status.   
+        > • \`list\` - displays all RR messages created by Peanut in this guild with current status.   
         > • \`delete\` \`<message ID>\` - deletes a RR message from channel and Peanut database (requires Discord Developer HUD).
         > • \`toggle\` \`<message ID>\` - disables/enables a RR message by given ID (requires Discord Developer HUD).
         `,
@@ -71,9 +71,16 @@ export const MESSAGES = {
         `,
         CREATE: {
           DESCRIPTION: 'Creates a reaction role message.',
+          PREVIEW_EMBED: {
+            TITLE: 'Use any of reaction to retrieve a role!',
+            DESCRIPTION: 'Reacting to this message will reward you with a role.',
+            FOOTER_BEFORE: 'Reaction Role Message Preview',
+            FOOTER_AFTER: 'Reaction Role Message',
+            NOTE: stripIndents`**NOTE**: Embed below is a preview. Output message will be send separately and Peanut will also make necessary cleanup.`
+          },
           PROMPTS: {
-            PROMPT_1: stripIndents`\nPlease type in an **EMOJI AND ROLE** as following (order does not matter) \`<emoji> <@MyRole> [optional description]\`
-              **Example**: \`🍔 @Hamburger Lover for hamburger lovers\`\n 
+            PROMPT_1: stripIndents`\nPlease type in an **EMOJI AND ROLE** as following \`<emoji> <@MyRole> [optional description]\`
+              **Example**: \`🥜 @PeanutRole for peanuts lovers\`\n 
               Type \`stop\` whenever you are done or \`cancel\` if you want to start over again.`,
             PROMPT_2: stripIndents`\nPlease type in a **DESCRIPTION** for embed \`<description>\`
             **Example**: \`Reacting to this message will reward you with a role.\`\n
@@ -372,14 +379,14 @@ export const MESSAGES = {
     },
     MOD: {
       CASES: {
-        DESCRIPTION: stripIndents`Available methods:
-					 • show \`<number>\`
-					 • delete \`<number>\`
-					Required: \`<>\` | Optional: \`[]\`
+        DESCRIPTION: stripIndents`**Available methods:**
+					> • show \`<number>\`
+					> • delete \`<number>\`
+          
+          Required: \`<>\` | Optional: \`[]\`
 				`,
         REPLY: (prefix: string | string[] | Promise<string | string[]>) => stripIndents`
-					When you beg me so much I just can't not help you~
-					Check \`${prefix}help cases\` for more information.
+          For more information check \`${prefix}help cases\`.
 				`,
 
         DELETE: {
@@ -390,7 +397,7 @@ export const MESSAGES = {
           },
           NO_CASE_NUMBER: 'at least provide me with a correct number.',
           NO_CASE:
-            "I looked where I could, but I couldn't find a case with that ID, maybe look for something that actually exists next time!",
+            "Case with that ID does not exist.",
           DELETE: 'You sure you want me to delete this case?',
           DELETING: (id: number) => `Deleting **${id}**...`,
           TIMEOUT: 'timed out. Cancelled delete.',
@@ -429,7 +436,7 @@ export const MESSAGES = {
         },
         NO_CASE_NUMBER: 'at least provide me with a correct number.',
         NO_CASE:
-          "I looked where I could, but I couldn't find a case with that Id, maybe look for something that actually exists next time!",
+          "Case with that ID does not exist.",
         WRONG_MOD: "you'd be wrong in thinking I would let you fiddle with other peoples achievements!",
         NO_MESSAGE: "looks like the message doesn't exist anymore!",
         REPLY: (id: number) => `Successfully updated duration for case **#${id}**`,
@@ -437,7 +444,7 @@ export const MESSAGES = {
 
       HISTORY: {
         DESCRIPTION: 'Check the history of a member.',
-        NO_PERMISSION: 'you know, I know, we should just leave it at that.',
+        NO_PERMISSION: 'you don\'t have permission to use this command.',
       },
 
       KICK: {
@@ -468,7 +475,7 @@ export const MESSAGES = {
         },
         NO_CASE_NUMBER: 'at least provide me with a correct number.',
         NO_CASE:
-          "I looked where I could, but I couldn't find a case with that Id, maybe look for something that actually exists next time!",
+          "Case with that ID does not exists.",
         WRONG_MOD: "you'd be wrong in thinking I would let you fiddle with other peoples achievements!",
         NO_MESSAGE: "looks like the message doesn't exist anymore!",
         REPLY: (ids: number[]) =>
@@ -505,7 +512,7 @@ export const MESSAGES = {
   ACTIONS: {
     INVALID_MEMBER: 'you have to provide a valid user on this guild.',
     INVALID_USER: 'you have to provide a valid user not on this guild.',
-    NO_STAFF: "nuh-uh! You know you can't do this.",
+    NO_STAFF: "nice try. You can't do this.",
     CURRENTLY_MODERATED: 'that user is currently being moderated by someone else.',
     NO_MUTE: 'there is no mute role configured on this server.',
 
