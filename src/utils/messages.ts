@@ -558,7 +558,7 @@ export const MESSAGES = {
       MESSAGE: (guild: string, reason?: string) => stripIndents`
 				**You have been softbanned from ${guild}**
 				${reason ? `\n**Reason:** ${reason}\n` : ''}
-				A softban is a kick that uses ban + unban to remove your messages from the server.
+				A softban is a kick that uses ban + immediate unban to remove your messages from the server.
 				You may rejoin whenever.
       `,
       DM_BLOCKED: (tag: string) => `Error sending ban info message to user ${tag} - he has DM blocked.`,
