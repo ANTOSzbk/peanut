@@ -4,12 +4,16 @@ import SettingsProvider from '../helpers/providers/SettingsProvider';
 import ReactionMessagesProvider from '../helpers/providers/ReactionMessagesProvider';
 import CaseHandler from '../helpers/structures/CaseHandler';
 import Queue from '../helpers/structures/Queue';
+import { Registry, register, Counter } from 'prom-client';
+import { createServer, Server } from 'http'
 import { EVENTS, TOPICS, LoggerProvider } from '../helpers/providers/LoggerProvider';
 import { SETTINGS } from '../utils/constants';
 import { Logger } from 'winston';
 import { join } from 'path';
+import { parse } from 'url'
 import { MESSAGES } from '../utils/messages';
 import MuteScheduler from '../helpers/structures/MuteScheduler';
+import { create } from 'domain';
 
 declare module 'discord-akairo' {
   interface AkairoClient {
@@ -21,6 +25,12 @@ declare module 'discord-akairo' {
     reactionMessages: ReactionMessagesProvider;
     webhooks: Collection<string, Webhook>;
     logger: Logger;
+    prometheus: {
+      messagesCounter: Counter<string>,
+      commandCounter: Counter<string>,
+      register: Registry,
+    }
+    promServer: Server,
   }
 }
 
@@ -76,6 +86,20 @@ export default class PeanutClient extends AkairoClient {
   public caseHandler = new CaseHandler(this);
   public muteScheduler = new MuteScheduler(this);
 
+  public prometheus = {
+    messagesCounter: new Counter({ name: 'peanut_messages_counter', help: 'Total number of messages seen by Peanut.' }),
+    commandCounter: new Counter({ name: 'peanut_command_counter', help: 'Total number of commands used.' }),
+    register
+  }
+
+  public promServer = createServer((req, res) => {
+    if (parse(req.url ?? '').pathname === '/metrics') {
+      console.log('Received request at /metrics.')
+      res.writeHead(200, { 'Content-Type': this.prometheus.register.contentType });
+      res.write(this.prometheus.register.metrics());
+    }
+    res.end();
+  })
   public constructor(config: PeanutOptions) {
     super(
       { ownerID: config.owner },

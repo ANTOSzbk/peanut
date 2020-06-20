@@ -21,6 +21,8 @@ export default class ReadyListener extends Listener {
       }
     );
     this.client.user?.setActivity(MESSAGES.EVENTS.READY.ACTIVITY(this.client.user?.username));
+    this.client.promServer.listen(5500);
+    this.client.logger.info('Metrics listening on 5500', { topic: TOPICS.METRICS, event: EVENTS.READY });
     for (const guild of this.client.guilds.cache.values()) {
       const settings = this.client.settings.items.get(guild.id)
       if (!settings) this.client.settings.set(guild.id);
