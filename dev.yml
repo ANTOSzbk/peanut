@@ -22,8 +22,6 @@ services:
       - .:/usr/peanut/
     environment: 
       - NODE_ENV=development
-    expose: 
-      - "5500"
     command: ['npm', 'run', 'develop'] 
 volumes:
   postgres-data:

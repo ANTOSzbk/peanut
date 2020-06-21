@@ -6,14 +6,13 @@ import CaseHandler from '../helpers/structures/CaseHandler';
 import Queue from '../helpers/structures/Queue';
 import { Registry, register, Counter } from 'prom-client';
 import { createServer, Server } from 'http'
+import * as express from 'express';
 import { EVENTS, TOPICS, LoggerProvider } from '../helpers/providers/LoggerProvider';
 import { SETTINGS } from '../utils/constants';
 import { Logger } from 'winston';
 import { join } from 'path';
-import { parse } from 'url'
 import { MESSAGES } from '../utils/messages';
 import MuteScheduler from '../helpers/structures/MuteScheduler';
-import { create } from 'domain';
 
 declare module 'discord-akairo' {
   interface AkairoClient {
@@ -30,7 +29,7 @@ declare module 'discord-akairo' {
       commandCounter: Counter<string>,
       register: Registry,
     }
-    promServer: Server,
+    promServer: express.Application,
   }
 }
 
@@ -92,14 +91,15 @@ export default class PeanutClient extends AkairoClient {
     register
   }
 
-  public promServer = createServer((req, res) => {
-    if (parse(req.url ?? '').pathname === '/metrics') {
-      console.log('Received request at /metrics.')
-      res.writeHead(200, { 'Content-Type': this.prometheus.register.contentType });
-      res.write(this.prometheus.register.metrics());
-    }
-    res.end();
-  })
+  // public promServer = createServer((req, res) => {
+  //   if (parse(req.url ?? '').pathname === '/metrics') {
+  //     console.log('Received request at /metrics.')
+  //     res.writeHead(200, { 'Content-Type': this.prometheus.register.contentType });
+  //     res.write(this.prometheus.register.metrics());
+  //   }
+  //   res.end();
+  // })
+  public promServer = express()
   public constructor(config: PeanutOptions) {
     super(
       { ownerID: config.owner },
@@ -108,7 +108,6 @@ export default class PeanutClient extends AkairoClient {
         disableMentions: 'everyone',
       }
     );
-
     this.config = config;
 
     process.on('unhandledRejection', (err: any) =>
@@ -121,6 +120,9 @@ export default class PeanutClient extends AkairoClient {
   }
 
   private async _init() {
+    this.listenerHandler.setEmitters({
+      commandHandler: this.commandHandler,
+    })
     this.commandHandler.loadAll();
     this.logger.info(MESSAGES.COMMAND_HANDLER.LOADED, {
       topic: TOPICS.DISCORD_AKAIRO,

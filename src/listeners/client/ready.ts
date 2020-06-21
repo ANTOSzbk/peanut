@@ -21,6 +21,11 @@ export default class ReadyListener extends Listener {
       }
     );
     this.client.user?.setActivity(MESSAGES.EVENTS.READY.ACTIVITY(this.client.user?.username));
+    this.client.promServer.get('/metrics', (req, res) => {
+      console.log('Received request at /metrics.')
+      res.setHeader('Content-Type', this.client.prometheus.register.contentType)
+      res.status(200).send(this.client.prometheus.register.metrics());
+    })
     this.client.promServer.listen(5500);
     this.client.logger.info('Metrics listening on 5500', { topic: TOPICS.METRICS, event: EVENTS.READY });
     for (const guild of this.client.guilds.cache.values()) {

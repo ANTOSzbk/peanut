@@ -25,10 +25,14 @@ services:
       context: ./
       dockerfile: Dockerfile
     restart: unless-stopped
+    expose:
+      - '5500'
     ports:
       - '5500:5500'
+    links: 
+      - "graphql-engine:hasura"
+    # network_mode: 'host'
     env_file: .env
-    network_mode: host
     depends_on: 
-      - "graphql-engine"
+        - "graphql-engine"
 
