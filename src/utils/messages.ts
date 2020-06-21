@@ -39,7 +39,18 @@ export const MESSAGES = {
     GUILD_MEMBER_ADD: {
       ERROR: (error: any, user: GuildMember) => `There was an error adding entry role to user ${user.user.tag}: ${error}`,
       ENTRY_ROLE: (user: GuildMember, guild: Guild, role: Role) => `Added role to new user ${user.user.tag} in guild ${guild.name} - ${role.name} [${role.id}].`
-    }
+    },
+    SHARD_DISCONNECT: {
+      LOG: (code: any) => `Shard disconnected. (${code})`,
+    },
+
+    SHARD_RECONNECT: {
+      LOG: "Shard is reconnecting.",
+    },
+
+    SHARD_RESUME: {
+      LOG: 'Shard reconnected.',
+    },
   },
   COMMANDS: {
     PREFIX: {

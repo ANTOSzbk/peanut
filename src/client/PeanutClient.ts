@@ -4,8 +4,7 @@ import SettingsProvider from '../helpers/providers/SettingsProvider';
 import ReactionMessagesProvider from '../helpers/providers/ReactionMessagesProvider';
 import CaseHandler from '../helpers/structures/CaseHandler';
 import Queue from '../helpers/structures/Queue';
-import { Registry, register, Counter } from 'prom-client';
-import { createServer, Server } from 'http'
+import { Registry, register, Counter, collectDefaultMetrics } from 'prom-client';
 import * as express from 'express';
 import { EVENTS, TOPICS, LoggerProvider } from '../helpers/providers/LoggerProvider';
 import { SETTINGS } from '../utils/constants';
@@ -13,6 +12,7 @@ import { Logger } from 'winston';
 import { join } from 'path';
 import { MESSAGES } from '../utils/messages';
 import MuteScheduler from '../helpers/structures/MuteScheduler';
+import { Server } from 'http'
 
 declare module 'discord-akairo' {
   interface AkairoClient {
@@ -29,7 +29,7 @@ declare module 'discord-akairo' {
       commandCounter: Counter<string>,
       register: Registry,
     }
-    promServer: express.Application,
+    promServer: Server,
   }
 }
 
@@ -100,6 +100,12 @@ export default class PeanutClient extends AkairoClient {
   //   res.end();
   // })
   public promServer = express()
+    .get('/metrics', (req, res) => {
+      console.log('Received request at /metrics.')
+      res.setHeader('Content-Type', this.prometheus.register.contentType)
+      res.status(200).send(this.prometheus.register.metrics());
+    })
+    .listen(5500)
   public constructor(config: PeanutOptions) {
     super(
       { ownerID: config.owner },
@@ -109,7 +115,6 @@ export default class PeanutClient extends AkairoClient {
       }
     );
     this.config = config;
-
     process.on('unhandledRejection', (err: any) =>
       this.logger.error(err, { topic: TOPICS.UNHANDLED_REJECTION })
     );
@@ -120,6 +125,7 @@ export default class PeanutClient extends AkairoClient {
   }
 
   private async _init() {
+    collectDefaultMetrics();
     this.listenerHandler.setEmitters({
       commandHandler: this.commandHandler,
     })
