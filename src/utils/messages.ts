@@ -1,4 +1,4 @@
-import { yellow, blue } from 'chalk';
+import { yellow, blue, green } from 'chalk';
 import { stripIndents } from 'common-tags';
 import { User, Guild, Webhook, TextChannel, Message, Role } from 'discord.js';
 import { getGuildChannels, getGuildRoles, getGuildWebhooks } from '../helpers/structures/PeanutGuild';
@@ -6,10 +6,10 @@ import { GuildMember } from 'discord.js';
 
 export const MESSAGES = {
   SETTINGS: {
-    INIT: 'Bot guilds settings loaded and initialized',
+    INIT: `${green(`Bot guilds settings loaded and initialized`)}`,
   },
   REACTION_MESSAGES: {
-    INIT: 'Reaction role messages loaded and initialized',
+    INIT: `${green(`Reaction role messages loaded and initialized`)}`,
   },
   COMMAND_HANDLER: {
     PROMPT: {
@@ -19,13 +19,13 @@ export const MESSAGES = {
       ENDED: 'Too many retries. The command has been cancelled.',
       CANCEL: 'The command has been cancelled.',
     },
-    LOADED: 'Command handler loaded',
+    LOADED: `${green(`Command handler loaded`)}`,
   },
   LISTENER_HANDLER: {
-    LOADED: 'Listener handler loaded',
+    LOADED: `${green(`Listener handler loaded`)}`,
   },
   INHIBITOR_HANDLER: {
-    LOADED: 'Inhibitor handler loaded',
+    LOADED: `${green(`Inhibtor handler loaded`)}`,
   },
   EVENTS: {
     READY: {
