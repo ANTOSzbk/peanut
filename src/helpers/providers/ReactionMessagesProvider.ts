@@ -41,7 +41,6 @@ export default class ReactionMessagesProvider extends Provider {
       try {
         const channel = (await this.client.channels.fetch(rMessage.channel, true)) as TextChannel;
         const message = await channel.messages.fetch(rMessage.message, true);
-        console.log(`Fetched ${message.id}`);
         if (message) this.items.set(rMessage.message, messageData);
       } catch (err) {
         this.client.logger.info(`[REACTION_MESSAGE]: Message with ID ${rMessage.message} not found.`, {

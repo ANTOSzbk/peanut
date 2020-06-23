@@ -1,8 +1,10 @@
 import { createLogger, format, transports } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
+import { green, yellow, keyword, hex, bold } from 'chalk';
+import { stripIndents } from 'common-tags';
 
 export enum TOPICS {
-  UNHANDLED_REJECTION = 'UNHANDLED_REJECTION',
+  UNHANDLED_REJECTION = `UNHANLED_REJECTION`,
   DISCORD = 'DISCORD',
   DISCORD_AKAIRO = 'DISCORD_AKAIRO',
   RPC = 'RPC',
@@ -38,8 +40,34 @@ export const LoggerProvider = createLogger({
     format.timestamp({ format: 'YYYY/MM/DD HH:mm:ss' }),
     format.printf((info: any): string => {
       const { timestamp, label, level, message, topic, event, ...rest } = info;
-      return `[${timestamp}][${label}][${level.toUpperCase()}][${topic}]${
-        event ? `[${event}]` : ''
+      let levelHex;
+      switch (level) {
+        case 'error':
+          levelHex = '#d70000'
+          break;
+        case 'warn':
+          levelHex = '#d7005f'
+          break;
+        case 'info':
+          levelHex = '#afaf00'
+          break;
+        default: levelHex = '#afff00'
+      }
+      let topicHex;
+      switch (topic) {
+        case TOPICS.DISCORD_AKAIRO:
+          topicHex = '#663300'
+          break;
+        case TOPICS.DISCORD:
+          topicHex = '#0099ff'
+          break;
+        case TOPICS.UNHANDLED_REJECTION:
+          topicHex = '#ff0000'
+          break;
+        default: topicHex = '#afff00'
+      }
+      return stripIndents`> ${keyword('plum')([`${timestamp}`])} 
+      $ ${keyword('gold').bold([`[${label}]`])}${hex(levelHex).bold(`[${level.toUpperCase()}]`)}${hex(topicHex).bold(`[${topic}]`)}${event ? `${hex('#aaaa55').bold(`${`[${event}]`}`)}` : ''
         }: ${message}${
         Object.keys(rest).length ? `\n${JSON.stringify(rest, null, 2)}` : ''
         }`;

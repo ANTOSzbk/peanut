@@ -33,6 +33,7 @@ services:
       - "graphql-engine:hasura"
     # network_mode: 'host'
     env_file: .env
+    tty: true
     environment: 
       - "TERM=xterm-256color"
     depends_on: 
