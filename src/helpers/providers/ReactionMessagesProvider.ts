@@ -13,8 +13,8 @@ import { TOPICS, EVENTS } from './LoggerProvider';
 
 export type ReactionItems = {
   channel: string;
-  disabled: boolean | null | undefined;
-  reactions: { emoji: string; role: string }[];
+  disabled: boolean;
+  reactions: { emoji: string; role: string }[] | any[];
 };
 
 export default class ReactionMessagesProvider extends Provider {
@@ -53,61 +53,38 @@ export default class ReactionMessagesProvider extends Provider {
     }
   }
 
-  public get<K extends keyof GraphQLReactionMessages, T>(
+  public get<K extends keyof ReactionItems, T>(
     message: string | Message,
     key: K,
     defaultValue?: T
-  ): ReactionItems[keyof ReactionItems] | any {
+  ) {
     const id = this.constructor.getMessageId(message);
     if (this.items.has(id)) {
-      const rMessage = this.items.get(id);
-      switch (key) {
-        case 'channel':
-          return rMessage!.channel as ReactionItems['channel'];
-        case 'disabled':
-          return rMessage!.disabled as ReactionItems['disabled'];
-        case 'reactions':
-          return rMessage!.reactions as ReactionItems['reactions'];
-        default:
-          break;
-      }
+      const rMessage = this.items.get(id)!;
+      return rMessage[key];
     }
     return defaultValue as T;
   }
 
-  public async set<K extends keyof ReactionItems, V extends ReactionItems[keyof ReactionItems]>(
+  public async set<K extends keyof ReactionItems, V extends ReactionItems[K]>(
     message: string | Message,
     key: K,
     value: V
   ) {
     const id = this.constructor.getMessageId(message);
     const data = this.items.get(id);
-    const tmp = {
+    let tmp = {
       channel: data?.channel,
       reactions: data?.reactions,
       disabled: data?.disabled,
     } as ReactionItems;
-    switch (key) {
-      case 'channel':
-        tmp.channel = value as ReactionItems['channel'];
-        break;
-      case 'disabled':
-        tmp.disabled = value as ReactionItems['disabled'];
-        break;
-      case 'reactions':
-        tmp.reactions = value as ReactionItems['reactions'];
-        break;
-      default:
-        break;
-    }
+    tmp[key] = value;
     this.items.set(id, tmp);
     const { data: res } = await graphQLClient.mutate<any, ReactionMessagesInsertInput>({
       mutation: MUTATION.UPDATE_REACTION_MESSAGES,
       variables: {
         message: id,
-        channel: tmp.channel,
-        reactions: tmp.reactions,
-        disabled: tmp.disabled,
+        ...tmp
       },
     });
     let rMessages: GraphQLReactionMessages;
