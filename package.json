@@ -47,7 +47,7 @@
     "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "1.13.5",
+    "@graphql-codegen/cli": "1.21.8",
     "@graphql-codegen/introspection": "^1.15.3",
     "@graphql-codegen/typescript": "1.13.5",
     "@graphql-codegen/typescript-resolvers": "^1.15.3",
